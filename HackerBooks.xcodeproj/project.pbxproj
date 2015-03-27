@@ -21,6 +21,8 @@
 		596A40361AC5C5840040A8AE /* favorite-outline.png in Resources */ = {isa = PBXBuildFile; fileRef = 596A40301AC5C5840040A8AE /* favorite-outline.png */; };
 		596A40371AC5C5840040A8AE /* favorite-outline@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 596A40311AC5C5840040A8AE /* favorite-outline@2x.png */; };
 		596A40381AC5C5840040A8AE /* favorite-outline@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 596A40321AC5C5840040A8AE /* favorite-outline@3x.png */; };
+		596A403D1AC5C8780040A8AE /* DTCSimplePDFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 596A403B1AC5C8780040A8AE /* DTCSimplePDFViewController.m */; };
+		596A403E1AC5C8780040A8AE /* DTCSimplePDFViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 596A403C1AC5C8780040A8AE /* DTCSimplePDFViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,9 @@
 		596A40301AC5C5840040A8AE /* favorite-outline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorite-outline.png"; sourceTree = "<group>"; };
 		596A40311AC5C5840040A8AE /* favorite-outline@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorite-outline@2x.png"; sourceTree = "<group>"; };
 		596A40321AC5C5840040A8AE /* favorite-outline@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorite-outline@3x.png"; sourceTree = "<group>"; };
+		596A403A1AC5C8780040A8AE /* DTCSimplePDFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTCSimplePDFViewController.h; sourceTree = "<group>"; };
+		596A403B1AC5C8780040A8AE /* DTCSimplePDFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTCSimplePDFViewController.m; sourceTree = "<group>"; };
+		596A403C1AC5C8780040A8AE /* DTCSimplePDFViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DTCSimplePDFViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +154,9 @@
 				596A40271AC5BE140040A8AE /* DTCBookViewController.h */,
 				596A40281AC5BE140040A8AE /* DTCBookViewController.m */,
 				596A40291AC5BE140040A8AE /* DTCBookViewController.xib */,
+				596A403A1AC5C8780040A8AE /* DTCSimplePDFViewController.h */,
+				596A403B1AC5C8780040A8AE /* DTCSimplePDFViewController.m */,
+				596A403C1AC5C8780040A8AE /* DTCSimplePDFViewController.xib */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -251,6 +259,7 @@
 				596A400E1AC5B5490040A8AE /* LaunchScreen.xib in Resources */,
 				596A40381AC5C5840040A8AE /* favorite-outline@3x.png in Resources */,
 				596A402B1AC5BE140040A8AE /* DTCBookViewController.xib in Resources */,
+				596A403E1AC5C8780040A8AE /* DTCSimplePDFViewController.xib in Resources */,
 				596A40361AC5C5840040A8AE /* favorite-outline.png in Resources */,
 				596A40351AC5C5840040A8AE /* favorite-filled@3x.png in Resources */,
 				596A400B1AC5B5490040A8AE /* Images.xcassets in Resources */,
@@ -275,6 +284,7 @@
 				596A40251AC5B87F0040A8AE /* DTCBook.m in Sources */,
 				596A40091AC5B5490040A8AE /* AppDelegate.m in Sources */,
 				596A40061AC5B5490040A8AE /* main.m in Sources */,
+				596A403D1AC5C8780040A8AE /* DTCSimplePDFViewController.m in Sources */,
 				596A402A1AC5BE140040A8AE /* DTCBookViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

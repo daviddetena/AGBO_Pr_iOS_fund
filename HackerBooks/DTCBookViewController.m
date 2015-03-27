@@ -8,20 +8,16 @@
 
 #import "DTCBookViewController.h"
 #import "DTCBook.h"
-
-@interface DTCBookViewController ()
-@end
+#import "DTCSimplePDFViewController.h"
 
 @implementation DTCBookViewController
-
-#pragma mark - Synthetize
-
 
 #pragma mark - Instance init
 - (id) initWithModel:(DTCBook *) aModel{
     if (self = [super initWithNibName:nil
                                bundle:nil]) {
         _model = aModel;
+        self.title = aModel.title;
     }
     return self;
 }
@@ -47,13 +43,13 @@
 }
 
 - (IBAction)displayPdfURL:(id)sender{
-
+    DTCSimplePDFViewController *pdfVC = [[DTCSimplePDFViewController alloc]initWithModel:self.model];
+    [self.navigationController pushViewController:pdfVC animated:YES];
 }
 
 
 #pragma mark - Utils
 - (void) syncModelWithView{
-    self.title = self.model.title;
     self.titleLabel.text = self.model.title;
     self.authorsLabel.text = [self.model convertToString:self.model.authors];
     self.tagsLabel.text = [self.model convertToString:self.model.tags];
