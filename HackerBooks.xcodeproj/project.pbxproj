@@ -12,6 +12,15 @@
 		596A400B1AC5B5490040A8AE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 596A400A1AC5B5490040A8AE /* Images.xcassets */; };
 		596A400E1AC5B5490040A8AE /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 596A400C1AC5B5490040A8AE /* LaunchScreen.xib */; };
 		596A401A1AC5B5490040A8AE /* HackerBooksTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 596A40191AC5B5490040A8AE /* HackerBooksTests.m */; };
+		596A40251AC5B87F0040A8AE /* DTCBook.m in Sources */ = {isa = PBXBuildFile; fileRef = 596A40241AC5B87F0040A8AE /* DTCBook.m */; };
+		596A402A1AC5BE140040A8AE /* DTCBookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 596A40281AC5BE140040A8AE /* DTCBookViewController.m */; };
+		596A402B1AC5BE140040A8AE /* DTCBookViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 596A40291AC5BE140040A8AE /* DTCBookViewController.xib */; };
+		596A40331AC5C5840040A8AE /* favorite-filled.png in Resources */ = {isa = PBXBuildFile; fileRef = 596A402D1AC5C5840040A8AE /* favorite-filled.png */; };
+		596A40341AC5C5840040A8AE /* favorite-filled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 596A402E1AC5C5840040A8AE /* favorite-filled@2x.png */; };
+		596A40351AC5C5840040A8AE /* favorite-filled@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 596A402F1AC5C5840040A8AE /* favorite-filled@3x.png */; };
+		596A40361AC5C5840040A8AE /* favorite-outline.png in Resources */ = {isa = PBXBuildFile; fileRef = 596A40301AC5C5840040A8AE /* favorite-outline.png */; };
+		596A40371AC5C5840040A8AE /* favorite-outline@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 596A40311AC5C5840040A8AE /* favorite-outline@2x.png */; };
+		596A40381AC5C5840040A8AE /* favorite-outline@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 596A40321AC5C5840040A8AE /* favorite-outline@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +44,17 @@
 		596A40131AC5B5490040A8AE /* HackerBooksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HackerBooksTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		596A40181AC5B5490040A8AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		596A40191AC5B5490040A8AE /* HackerBooksTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HackerBooksTests.m; sourceTree = "<group>"; };
+		596A40231AC5B87F0040A8AE /* DTCBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTCBook.h; sourceTree = "<group>"; };
+		596A40241AC5B87F0040A8AE /* DTCBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTCBook.m; sourceTree = "<group>"; };
+		596A40271AC5BE140040A8AE /* DTCBookViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTCBookViewController.h; sourceTree = "<group>"; };
+		596A40281AC5BE140040A8AE /* DTCBookViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTCBookViewController.m; sourceTree = "<group>"; };
+		596A40291AC5BE140040A8AE /* DTCBookViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DTCBookViewController.xib; sourceTree = "<group>"; };
+		596A402D1AC5C5840040A8AE /* favorite-filled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorite-filled.png"; sourceTree = "<group>"; };
+		596A402E1AC5C5840040A8AE /* favorite-filled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorite-filled@2x.png"; sourceTree = "<group>"; };
+		596A402F1AC5C5840040A8AE /* favorite-filled@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorite-filled@3x.png"; sourceTree = "<group>"; };
+		596A40301AC5C5840040A8AE /* favorite-outline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorite-outline.png"; sourceTree = "<group>"; };
+		596A40311AC5C5840040A8AE /* favorite-outline@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorite-outline@2x.png"; sourceTree = "<group>"; };
+		596A40321AC5C5840040A8AE /* favorite-outline@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorite-outline@3x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +96,9 @@
 		596A40021AC5B5490040A8AE /* HackerBooks */ = {
 			isa = PBXGroup;
 			children = (
+				596A40391AC5C58A0040A8AE /* Resources */,
+				596A40261AC5B88E0040A8AE /* Models */,
+				596A402C1AC5BF170040A8AE /* Controllers */,
 				596A40071AC5B5490040A8AE /* AppDelegate.h */,
 				596A40081AC5B5490040A8AE /* AppDelegate.m */,
 				596A400A1AC5B5490040A8AE /* Images.xcassets */,
@@ -109,6 +132,38 @@
 				596A40181AC5B5490040A8AE /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		596A40261AC5B88E0040A8AE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				596A40231AC5B87F0040A8AE /* DTCBook.h */,
+				596A40241AC5B87F0040A8AE /* DTCBook.m */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		596A402C1AC5BF170040A8AE /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				596A40271AC5BE140040A8AE /* DTCBookViewController.h */,
+				596A40281AC5BE140040A8AE /* DTCBookViewController.m */,
+				596A40291AC5BE140040A8AE /* DTCBookViewController.xib */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		596A40391AC5C58A0040A8AE /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				596A402D1AC5C5840040A8AE /* favorite-filled.png */,
+				596A402E1AC5C5840040A8AE /* favorite-filled@2x.png */,
+				596A402F1AC5C5840040A8AE /* favorite-filled@3x.png */,
+				596A40301AC5C5840040A8AE /* favorite-outline.png */,
+				596A40311AC5C5840040A8AE /* favorite-outline@2x.png */,
+				596A40321AC5C5840040A8AE /* favorite-outline@3x.png */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -191,8 +246,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				596A40341AC5C5840040A8AE /* favorite-filled@2x.png in Resources */,
+				596A40371AC5C5840040A8AE /* favorite-outline@2x.png in Resources */,
 				596A400E1AC5B5490040A8AE /* LaunchScreen.xib in Resources */,
+				596A40381AC5C5840040A8AE /* favorite-outline@3x.png in Resources */,
+				596A402B1AC5BE140040A8AE /* DTCBookViewController.xib in Resources */,
+				596A40361AC5C5840040A8AE /* favorite-outline.png in Resources */,
+				596A40351AC5C5840040A8AE /* favorite-filled@3x.png in Resources */,
 				596A400B1AC5B5490040A8AE /* Images.xcassets in Resources */,
+				596A40331AC5C5840040A8AE /* favorite-filled.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,8 +272,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				596A40251AC5B87F0040A8AE /* DTCBook.m in Sources */,
 				596A40091AC5B5490040A8AE /* AppDelegate.m in Sources */,
 				596A40061AC5B5490040A8AE /* main.m in Sources */,
+				596A402A1AC5BE140040A8AE /* DTCBookViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

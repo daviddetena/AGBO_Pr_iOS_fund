@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "DTCBook.h"
+#import "DTCBookViewController.h"
 
 @interface AppDelegate ()
 
@@ -16,7 +18,26 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window = [[UIWindow alloc]
+                   initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    // Create the model
+    DTCBook *book1 = [[DTCBook alloc] initWithTitle:@"Pro Git"
+                                            authors:@"Scott Chacon, Ben Straub"
+                                               tags:@"version control, git"
+                                           photoURL:[NSURL URLWithString:@"http://hackershelf.com/media/cache/b4/24/b42409de128aa7f1c9abbbfa549914de.jpg"]
+                                             pdfURL:[NSURL URLWithString:@"https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf"]];
+    
+    // Create the VC
+    DTCBookViewController *bookVC = [[DTCBookViewController alloc]initWithModel:book1];
+    
+    // Create the combiner
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:bookVC];
+    
+    // Set the combiner as the root VC
+    self.window.rootViewController = nav;
+    
+    
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
