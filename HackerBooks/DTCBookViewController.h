@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DTCLibraryTableViewController.h"
 
 // Forward declaration
 @class DTCBook;
 
-@interface DTCBookViewController : UIViewController
+@interface DTCBookViewController : UIViewController<UISplitViewControllerDelegate, DTCLibraryTableViewControllerDelegate>
 
 #pragma mark - Properties
 @property (weak,nonatomic) IBOutlet UILabel *titleLabel;

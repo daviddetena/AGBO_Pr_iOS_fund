@@ -8,6 +8,7 @@
 //  This class represents a book in the library
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface DTCBook : NSObject
 

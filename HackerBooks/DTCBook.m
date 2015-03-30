@@ -64,7 +64,7 @@
 
 #pragma mark - Utils
 
-// Utility method for extracting authors/tags from NSString and adding to an array
+// Utility method to extrac authors/tags from NSString and add to an array
 -(NSArray *) extractFromString: (NSString *)string{
     NSArray *arrayStrings = [string componentsSeparatedByString:@", "];
     return arrayStrings;

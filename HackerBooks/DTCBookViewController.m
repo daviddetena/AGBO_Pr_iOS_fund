@@ -9,6 +9,7 @@
 #import "DTCBookViewController.h"
 #import "DTCBook.h"
 #import "DTCSimplePDFViewController.h"
+#import "DTCLibraryTableViewController.h"
 
 @implementation DTCBookViewController
 
@@ -22,12 +23,16 @@
     return self;
 }
 
+#pragma mark - View Lifecycle
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    // Display or hide the button that shows the table in portrait mode on iPads
+    self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
     [self syncModelWithView];
     
 }
 
+#pragma mark - Memory
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -68,6 +73,32 @@
         image = [UIImage imageNamed:@"favorite-outline"];
     }
     [self.favoriteButton setImage:image forState:UIControlStateNormal];
+}
+
+
+#pragma mark - UISplitViewControllerDelegate
+// Display or hide the button that shows the table in portrait mode on iPads
+- (void) splitViewController:(UISplitViewController *)svc willChangeToDisplayMode:(UISplitViewControllerDisplayMode)displayMode{
+    
+    // Check out if the table is visible
+    if (displayMode==UISplitViewControllerDisplayModePrimaryHidden) {
+        // Table hidden => show button on the navigation
+        self.navigationItem.leftBarButtonItem = svc.displayModeButtonItem;
+    }
+    else{
+        // Table visible => Hide split button
+        self.navigationItem.leftBarButtonItem = nil;
+    }
+}
+
+
+#pragma mark - DTCLibraryTableViewControllerDelegate
+// Implements the protocol method for the table view
+- (void) libraryTableViewController:(DTCLibraryTableViewController *) libraryVC didSelectBook:(DTCBook *) aBook{
+    // Update the model
+    self.title = aBook.title;
+    self.model = aBook;
+    [self syncModelWithView];
 }
 
 

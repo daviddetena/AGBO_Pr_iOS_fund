@@ -9,6 +9,8 @@
 #import "AppDelegate.h"
 #import "DTCBook.h"
 #import "DTCBookViewController.h"
+#import "DTCLibrary.h"
+#import "DTCLibraryTableViewController.h"
 
 @interface AppDelegate ()
 
@@ -21,21 +23,27 @@
     self.window = [[UIWindow alloc]
                    initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    // Create the model
-    DTCBook *book1 = [[DTCBook alloc] initWithTitle:@"Pro Git"
-                                            authors:@"Scott Chacon, Ben Straub"
-                                               tags:@"version control, git"
-                                           photoURL:[NSURL URLWithString:@"http://hackershelf.com/media/cache/b4/24/b42409de128aa7f1c9abbbfa549914de.jpg"]
-                                             pdfURL:[NSURL URLWithString:@"https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf"]];
+    // Load the model of library
+    DTCLibrary *library = [[DTCLibrary alloc]init];
     
-    // Create the VC
-    DTCBookViewController *bookVC = [[DTCBookViewController alloc]initWithModel:book1];
+    // Create the VCs. Select the first book of the first tag to be display first
+    DTCLibraryTableViewController *libraryVC = [[DTCLibraryTableViewController alloc]initWithModel:library style:UITableViewStylePlain];
+    DTCBookViewController *bookVC = [[DTCBookViewController alloc] initWithModel:[library bookForTag:[library.tags objectAtIndex:0] atIndex:0]];
     
-    // Create the combiner
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:bookVC];
+    // Create the combiners
+    UINavigationController *navLib = [[UINavigationController alloc]initWithRootViewController:libraryVC];
+    UINavigationController *navBook = [[UINavigationController alloc]initWithRootViewController:bookVC];
     
-    // Set the combiner as the root VC
-    self.window.rootViewController = nav;
+    // Create the UISplitVC with the other VCs
+    UISplitViewController *splitVC = [[UISplitViewController alloc]init];
+    splitVC.viewControllers = @[navLib,navBook];
+    
+    // Set delegates (the book will be the delegate for the UISplitVC and the tableVC)
+    libraryVC.delegate = bookVC;
+    splitVC.delegate = bookVC;
+    
+    // Set the UISplitVC as the root VC
+    self.window.rootViewController = splitVC;
     
     
     // Override point for customization after application launch.

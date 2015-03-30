@@ -23,6 +23,8 @@
 		596A40381AC5C5840040A8AE /* favorite-outline@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 596A40321AC5C5840040A8AE /* favorite-outline@3x.png */; };
 		596A403D1AC5C8780040A8AE /* DTCSimplePDFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 596A403B1AC5C8780040A8AE /* DTCSimplePDFViewController.m */; };
 		596A403E1AC5C8780040A8AE /* DTCSimplePDFViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 596A403C1AC5C8780040A8AE /* DTCSimplePDFViewController.xib */; };
+		5976703A1AC938560018DD03 /* DTCLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 597670391AC938560018DD03 /* DTCLibrary.m */; };
+		5976703D1AC945010018DD03 /* DTCLibraryTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5976703C1AC945010018DD03 /* DTCLibraryTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +62,10 @@
 		596A403A1AC5C8780040A8AE /* DTCSimplePDFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTCSimplePDFViewController.h; sourceTree = "<group>"; };
 		596A403B1AC5C8780040A8AE /* DTCSimplePDFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTCSimplePDFViewController.m; sourceTree = "<group>"; };
 		596A403C1AC5C8780040A8AE /* DTCSimplePDFViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DTCSimplePDFViewController.xib; sourceTree = "<group>"; };
+		597670381AC938560018DD03 /* DTCLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTCLibrary.h; sourceTree = "<group>"; };
+		597670391AC938560018DD03 /* DTCLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTCLibrary.m; sourceTree = "<group>"; };
+		5976703B1AC945010018DD03 /* DTCLibraryTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTCLibraryTableViewController.h; sourceTree = "<group>"; };
+		5976703C1AC945010018DD03 /* DTCLibraryTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTCLibraryTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +150,8 @@
 			children = (
 				596A40231AC5B87F0040A8AE /* DTCBook.h */,
 				596A40241AC5B87F0040A8AE /* DTCBook.m */,
+				597670381AC938560018DD03 /* DTCLibrary.h */,
+				597670391AC938560018DD03 /* DTCLibrary.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -154,6 +162,8 @@
 				596A40271AC5BE140040A8AE /* DTCBookViewController.h */,
 				596A40281AC5BE140040A8AE /* DTCBookViewController.m */,
 				596A40291AC5BE140040A8AE /* DTCBookViewController.xib */,
+				5976703B1AC945010018DD03 /* DTCLibraryTableViewController.h */,
+				5976703C1AC945010018DD03 /* DTCLibraryTableViewController.m */,
 				596A403A1AC5C8780040A8AE /* DTCSimplePDFViewController.h */,
 				596A403B1AC5C8780040A8AE /* DTCSimplePDFViewController.m */,
 				596A403C1AC5C8780040A8AE /* DTCSimplePDFViewController.xib */,
@@ -282,6 +292,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				596A40251AC5B87F0040A8AE /* DTCBook.m in Sources */,
+				5976703A1AC938560018DD03 /* DTCLibrary.m in Sources */,
+				5976703D1AC945010018DD03 /* DTCLibraryTableViewController.m in Sources */,
 				596A40091AC5B5490040A8AE /* AppDelegate.m in Sources */,
 				596A40061AC5B5490040A8AE /* main.m in Sources */,
 				596A403D1AC5C8780040A8AE /* DTCSimplePDFViewController.m in Sources */,
@@ -470,6 +482,7 @@
 				596A401F1AC5B5490040A8AE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		596A40201AC5B5490040A8AE /* Build configuration list for PBXNativeTarget "HackerBooksTests" */ = {
 			isa = XCConfigurationList;
@@ -478,6 +491,7 @@
 				596A40221AC5B5490040A8AE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
