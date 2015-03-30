@@ -8,7 +8,9 @@
 
 #import "DTCLibraryTableViewController.h"
 #import "DTCBook.h"
+#import "DTCBookViewController.h"
 #import "DTCLibrary.h"
+
 @import UIKit;
 
 @interface DTCLibraryTableViewController ()
@@ -75,19 +77,19 @@
         }
         else{
             if([self.favoriteBooks count]==1){
-                return [NSString stringWithFormat:@"%ld book",[self.favoriteBooks count]];
+                return [NSString stringWithFormat:@"%ld book",(unsigned long)[self.favoriteBooks count]];
             }
             else{
-                return [NSString stringWithFormat:@"%ld books",[self.favoriteBooks count]];
+                return [NSString stringWithFormat:@"%ld books",(unsigned long)[self.favoriteBooks count]];
             }
         }
     }
     else{
         if([self.model bookCountForTag:[self.model.tags objectAtIndex:section-1]]==1){
-            return [NSString stringWithFormat:@"%ld book",[self.model bookCountForTag:[self.model.tags objectAtIndex:section-1]]];
+            return [NSString stringWithFormat:@"%ld book",(unsigned long)[self.model bookCountForTag:[self.model.tags objectAtIndex:section-1]]];
         }
         else{
-            return [NSString stringWithFormat:@"%ld books",[self.model bookCountForTag:[self.model.tags objectAtIndex:section-1]]];
+            return [NSString stringWithFormat:@"%ld books",(unsigned long)[self.model bookCountForTag:[self.model.tags objectAtIndex:section-1]]];
         }
     }
 }
@@ -127,7 +129,10 @@
     if([self.delegate respondsToSelector:@selector(libraryTableViewController:didSelectBook:)]){
         [self.delegate libraryTableViewController:self didSelectBook:book];
     }
-
+    
+    // Notify the PDFViewer that the model has changed through notifications. Send the new selected book
+    NSNotification *notification = [NSNotification notificationWithName:NOTIF_NAME_BOOK_SELECTED_PDF_URL object:self userInfo:@{NOTIF_KEY_BOOK:book}];
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
 
@@ -142,6 +147,13 @@
         book = [self.model bookForTag:[self.model.tags objectAtIndex:indexPath.section -1] atIndex:indexPath.row];
     }
     return book;
+}
+
+#pragma mark - Auto delegate (por iphones)
+// Push the detail view controller of the book selected
+- (void) libraryTableViewController:(DTCLibraryTableViewController *)libraryVC didSelectBook:(DTCBook *)aBook{
+    DTCBookViewController *bookVC = [[DTCBookViewController alloc]initWithModel:aBook];
+    [self.navigationController pushViewController:bookVC animated:YES];
 }
 
 @end

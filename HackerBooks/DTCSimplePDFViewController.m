@@ -8,6 +8,7 @@
 
 #import "DTCSimplePDFViewController.h"
 #import "DTCBook.h"
+#import "DTCLibraryTableViewController.h"
 
 @interface DTCSimplePDFViewController ()
 
@@ -15,10 +16,7 @@
 
 @implementation DTCSimplePDFViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-}
+#pragma mark - Init
 
 - (id) initWithModel:(DTCBook *)aModel{
     if(self = [super initWithNibName:nil bundle:nil]){
@@ -28,14 +26,29 @@
     return self;
 }
 
+#pragma mark - View Lifecycle
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
 
+    // Suscribe for notifications
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter addObserver:self selector:@selector(notifyThatPdfUrlDidChange:) name:NOTIF_NAME_BOOK_SELECTED_PDF_URL object:nil];
+    
     // This class will be the delegate for the browser
     self.browser.delegate = self;
     [self displayPdfFromURL:self.model.pdfURL];
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+    // Unsuscribe from notification center
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter removeObserver:self name:NOTIF_NAME_BOOK_SELECTED_PDF_URL object:nil];
+}
+
+
+#pragma mark - Memory
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -82,6 +95,16 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
         return NO;
     }
     return YES;
+}
+
+#pragma mark - Notifications
+- (void) notifyThatPdfUrlDidChange: (NSNotification *) n{
+    
+    // Get the model from Notification
+    NSDictionary *dict = [n userInfo];
+    DTCBook *book = [dict objectForKey:NOTIF_KEY_BOOK];
+    self.model = book;
+    [self displayPdfFromURL:self.model.pdfURL];
 }
 
 @end

@@ -19,7 +19,7 @@
 @property (weak,nonatomic) IBOutlet UILabel *authorsLabel;
 @property (weak,nonatomic) IBOutlet UILabel *tagsLabel;
 @property (weak,nonatomic) IBOutlet UIImageView *photoImageView;
-@property (weak,nonatomic) IBOutlet UIButton *favoriteButton;
+@property (weak,nonatomic) IBOutlet UIBarButtonItem *favoriteButton;
 @property (strong,nonatomic) DTCBook *model;
 
 #pragma mark - Instance init

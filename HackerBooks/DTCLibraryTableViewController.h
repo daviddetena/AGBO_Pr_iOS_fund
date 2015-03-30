@@ -11,9 +11,10 @@
 #import "DTCBook.h"
 #import "DTCLibrary.h"
 
+#define NOTIF_NAME_BOOK_SELECTED_PDF_URL @"newBookPdfURL"
+#define NOTIF_KEY_BOOK @"book"
+
 @class DTCLibraryTableViewController;
-//@class DTCLibrary;
-//@class DTCBook;
 
 #pragma mark - Custom protocol
 @protocol DTCLibraryTableViewControllerDelegate <NSObject>
@@ -23,7 +24,8 @@
                       didSelectBook:(DTCBook *) aBook;
 @end
 
-@interface DTCLibraryTableViewController : UITableViewController
+// Auto-delegate
+@interface DTCLibraryTableViewController : UITableViewController<DTCLibraryTableViewControllerDelegate>
 
 #pragma mark - Properties
 // Library model and array of favorites

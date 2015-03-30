@@ -58,8 +58,14 @@
     self.titleLabel.text = self.model.title;
     self.authorsLabel.text = [self.model convertToString:self.model.authors];
     self.tagsLabel.text = [self.model convertToString:self.model.tags];
-    self.photoImageView.image = self.model.photo;
     
+    /*
+    self.titleLabel.numberOfLines = 0;
+    self.authorsLabel.numberOfLines = 0;
+    self.tagsLabel.numberOfLines = 0;
+     */
+    
+    self.photoImageView.image = self.model.photo;
     [self setFavoriteImage];
 }
 
@@ -72,7 +78,7 @@
     else{
         image = [UIImage imageNamed:@"favorite-outline"];
     }
-    [self.favoriteButton setImage:image forState:UIControlStateNormal];
+    [self.favoriteButton setImage:image];
 }
 
 
