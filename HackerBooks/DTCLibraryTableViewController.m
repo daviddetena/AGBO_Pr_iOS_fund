@@ -10,6 +10,7 @@
 #import "DTCBook.h"
 #import "DTCBookViewController.h"
 #import "DTCLibrary.h"
+#import "Settings.h"
 
 @import UIKit;
 
@@ -140,6 +141,9 @@
     // Notify the PDFViewer through notifications that the model has changed. Send the new selected book
     NSNotification *notification = [NSNotification notificationWithName:NOTIF_NAME_BOOK_SELECTED_PDF_URL object:self userInfo:@{NOTIF_KEY_BOOK:book}];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
+    
+    // Save current book in NSUserDefaults
+    [self saveLastSelectedBookAtIndexPath:indexPath];
 }
 
 
@@ -184,6 +188,16 @@
     
     // Reload table data
     [self.tableView reloadData];
+}
+
+#pragma mark - Persistence
+- (void) saveLastSelectedBookAtIndexPath: (NSIndexPath *) indexPath {
+    // Get NSUserDefaults and save coords of the current selected book
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSArray *coords = @[@(indexPath.section),@(indexPath.row)];
+    [defaults setObject:coords forKey:LAST_SELECTED_BOOK];
+    
+    [defaults synchronize];
 }
 
 @end

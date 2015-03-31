@@ -11,7 +11,7 @@
 
 @implementation DTCBook
 
-// When a readonly property is created and you implement a custom getter, like in this case,
+// When a readonly property is created and a custom getter is coded, like in this case,
 // the compiler assumes that you will not need an instance variable. But we do need it here,
 // so we have to tell it to include the variable, with @synthesize
 @synthesize photo = _photo;
@@ -46,6 +46,7 @@
 
 
 #pragma mark - Instance init
+// Main init
 - (id) initWithTitle:(NSString *) aTitle
              authors:(NSString *) stringOfAuthors
                 tags:(NSString *) stringOfTags
@@ -60,6 +61,15 @@
         _pdfURL = aPdfURL;
     }
     return self;
+}
+
+// Init from a dictionary
+- (id) initWithDictionary: (NSDictionary *) aDictionary{
+    return [self initWithTitle:[aDictionary objectForKey:@"title"]
+                       authors:[aDictionary objectForKey:@"authors"]
+                          tags:[aDictionary objectForKey:@"tags"]
+                      photoURL:[NSURL URLWithString:[aDictionary objectForKey:@"image_url"]]
+                        pdfURL:[NSURL URLWithString:[aDictionary objectForKey:@"pdf_url"]]];
 }
 
 #pragma mark - Utils
@@ -78,6 +88,16 @@
         string = [string stringByAppendingString:@", "];
     }
     return string;
+}
+
+#pragma mark - JSON
+// Turn an object of this class into a NSDictionary to use it to create a JSON
+- (NSDictionary *) proxyForJSON{
+    return @{@"title"       : self.title,
+             @"authors"     : self.authors,
+             @"tags"        : self.tags,
+             @"image_url"   : [self.photoURL path],
+             @"pdf_url"     : [self.pdfURL path]};
 }
 
 @end

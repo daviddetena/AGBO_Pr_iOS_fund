@@ -24,6 +24,7 @@
 
 
 #pragma mark - Instance init
+- (id) initWithArray: (NSArray *) arrayOfModels;
 
 
 #pragma mark - Instance methods

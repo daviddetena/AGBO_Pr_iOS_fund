@@ -12,7 +12,7 @@
 @interface DTCLibrary ()
 
 // Array with all the books
-@property (strong,nonatomic) NSArray *books;
+@property (strong,nonatomic) NSMutableArray *books;
 @property (strong,nonatomic) NSMutableArray *auxTags;
 
 @end
@@ -38,43 +38,49 @@
 - (id) init{
     if(self = [super init]){
         // Initialize model
-        DTCBook *book1 = [[DTCBook alloc] initWithTitle:@"Pro Git"
-                                                authors:@"Scott Chacon, Ben Straub"
-                                                   tags:@"version control, git"
-                                               photoURL:[NSURL URLWithString:@"http://hackershelf.com/media/cache/b4/24/b42409de128aa7f1c9abbbfa549914de.jpg"]
-                                                 pdfURL:[NSURL URLWithString:@"https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf"]];
         
-        DTCBook *book2 = [[DTCBook alloc] initWithTitle:@"Eloquent Javascript"
-                                                authors:@"Marijn Haverbeke"
-                                                   tags:@"javascript"
-                                               photoURL:[NSURL URLWithString:@"http://hackershelf.com/media/cache/e5/27/e527064919530802af898a4798318ab9.jpg"]
-                                                 pdfURL:[NSURL URLWithString:@"http://eloquentjavascript.net/Eloquent_JavaScript.pdf"]];
+        // Get data from a remote resource via JSON
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://keepcodigtest.blob.core.windows.net/containerblobstest/books_readable.json"]];
         
-        DTCBook *book3 = [[DTCBook alloc] initWithTitle:@"Think Complexity"
-                                                authors:@"Allen B. Downey"
-                                                   tags:@"programming, python, data structures"
-                                               photoURL:[NSURL URLWithString:@"http://hackershelf.com/media/cache/97/bf/97bfce708365236e0a5f3f9e26b4a796.jpg"]
-                                                 pdfURL:[NSURL URLWithString:@"http://greenteapress.com/compmod/thinkcomplexity.pdf"]];
-        
-        DTCBook *book4 = [[DTCBook alloc] initWithTitle:@"Think Python"
-                                                authors:@"Allen B. Downey "
-                                                   tags:@"python, cs"
-                                               photoURL:[NSURL URLWithString:@"http://hackershelf.com/media/cache/f3/fe/f3fec7d794709480759e9b311fb7f2ec.jpg"]
-                                                 pdfURL:[NSURL URLWithString:@"http://greenteapress.com/thinkpython/thinkpython.pdf"]];
-        // Save books in the array
-        self.books = @[book1,book2,book3,book4];
-        self.auxTags = [[NSMutableArray alloc]init];
-        [self addTagsFromArray: [book1 tags]];
-        [self addTagsFromArray: [book2 tags]];
-        [self addTagsFromArray: [book3 tags]];
-        [self addTagsFromArray: [book4 tags]];
-        
+        // Get response from server dealing with errors
+        NSURLResponse *response = [[NSURLResponse alloc]init];
+        NSError *error;
+        NSData *data = [NSURLConnection sendSynchronousRequest:request
+                                             returningResponse:&response
+                                                         error:&error];
+        if (data!=nil) {
+            // There is data
+            id JSONObjects = [NSJSONSerialization JSONObjectWithData:data
+                                                             options:kNilOptions
+                                                               error:&error];
+            if (JSONObjects!=nil) {
+                // Data parsed successfully => Create an Array of NSDictionary
+                if ([JSONObjects isKindOfClass:[NSArray class]]) {
+                    self.books = [NSMutableArray arrayWithCapacity:[JSONObjects count]];
+                    self.auxTags = [[NSMutableArray alloc]init];
+                    
+                    // Check out if data was parsed as NSArray of NSDictionary
+                    for (NSDictionary *dict in JSONObjects) {
+                        // Create books from dictionary. Add the books and new tags from them to the library
+                        DTCBook *book = [[DTCBook alloc] initWithDictionary:dict];
+                        [self.books addObject:book];
+                        [self addTagsFromArray:book.tags];
+                    }
+                }
+            }
+            else{
+                NSLog(@"Error while parsin JSON: %@",error.localizedDescription);
+            }
+        }
+        else{
+            // No data or error
+            NSLog(@"Error while downloading JSON from server: %@",error.localizedDescription);
+        }
     }
     return self;
 }
 
 #pragma mark - Instance methods
-
 
 // Number of books with a specific tag
 - (NSUInteger) bookCountForTag: (NSString *) tag{

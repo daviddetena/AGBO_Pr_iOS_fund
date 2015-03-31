@@ -36,10 +36,17 @@
             photoURL:(NSURL *) aPhotoURL
               pdfURL:(NSURL *) aPdfURL;
 
+// Init from a dictionary
+- (id) initWithDictionary: (NSDictionary *) aDictionary;
+
 #pragma mark - Utils
 // Used to include every tag/author into a string that will be displayed
 // in the Authors UILabel
--(NSString *) convertToString: (NSArray *) anArray;
+- (NSString *) convertToString: (NSArray *) anArray;
+
+#pragma mark - JSON
+// Turn an object of this class into a NSDictionary to use it to create a JSON
+- (NSDictionary *) proxyForJSON;
 
 
 @end

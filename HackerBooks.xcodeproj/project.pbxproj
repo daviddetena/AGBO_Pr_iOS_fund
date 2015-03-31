@@ -66,6 +66,7 @@
 		597670391AC938560018DD03 /* DTCLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTCLibrary.m; sourceTree = "<group>"; };
 		5976703B1AC945010018DD03 /* DTCLibraryTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTCLibraryTableViewController.h; sourceTree = "<group>"; };
 		5976703C1AC945010018DD03 /* DTCLibraryTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTCLibraryTableViewController.m; sourceTree = "<group>"; };
+		597844E51ACAB62800384B49 /* Settings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +116,7 @@
 				596A400A1AC5B5490040A8AE /* Images.xcassets */,
 				596A400C1AC5B5490040A8AE /* LaunchScreen.xib */,
 				596A40031AC5B5490040A8AE /* Supporting Files */,
+				597844E51ACAB62800384B49 /* Settings.h */,
 			);
 			path = HackerBooks;
 			sourceTree = "<group>";
