@@ -28,8 +28,20 @@
     [super viewWillAppear:animated];
     // Display or hide the button that shows the table in portrait mode on iPads
     self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+    
+    // Suscribe to own notifications
+    NSNotificationCenter *defCenter = [NSNotificationCenter defaultCenter];
+    [defCenter addObserver:self selector:@selector(notifyThatBookDidToggleFavorite:) name:NOTIF_NAME_BOOK_TOGGLE_FAVORITE object:nil];
+    
     [self syncModelWithView];
     
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+    // Unsuscribe from own notifications
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - Memory
@@ -43,8 +55,9 @@
 - (IBAction)toggleFavorite:(id)sender{
     self.model.favorite = !self.model.favorite;
     NSLog(@"Favorite = %d", self.model.favorite);
-    [self setFavoriteImage];
     
+    [self postNotificationBookDidToggleFavorite];
+    [self updateFavoriteStatus];
 }
 
 - (IBAction)displayPdfURL:(id)sender{
@@ -66,11 +79,11 @@
      */
     
     self.photoImageView.image = self.model.photo;
-    [self setFavoriteImage];
+    [self updateFavoriteStatus];
 }
 
 // Set favourite button background image regarding its state
-- (void)setFavoriteImage{
+- (void) updateFavoriteStatus{
     UIImage *image = nil;
     if (self.model.favorite) {
         image = [UIImage imageNamed:@"favorite-filled"];
@@ -80,7 +93,6 @@
     }
     [self.favoriteButton setImage:image];
 }
-
 
 #pragma mark - UISplitViewControllerDelegate
 // Display or hide the button that shows the table in portrait mode on iPads
@@ -99,7 +111,7 @@
 
 
 #pragma mark - DTCLibraryTableViewControllerDelegate
-// Implements the protocol method for the table view
+// Implements custom protocol method of the table view
 - (void) libraryTableViewController:(DTCLibraryTableViewController *) libraryVC didSelectBook:(DTCBook *) aBook{
     // Update the model
     self.title = aBook.title;
@@ -107,5 +119,16 @@
     [self syncModelWithView];
 }
 
+#pragma mark - Notifications
+- (void) postNotificationBookDidToggleFavorite{
+    // Create a notification to let the others VC know that there was a change in the model
+    NSNotification *not = [NSNotification notificationWithName:NOTIF_NAME_BOOK_TOGGLE_FAVORITE object:self userInfo:@{NOTIF_KEY_BOOK_FAVORITE:self.model}];
+    // Send the notification
+    [[NSNotificationCenter defaultCenter] postNotification:not];
+}
+
+- (void) notifyThatBookDidToggleFavorite: (NSNotification *) notification{
+    [self updateFavoriteStatus];
+}
 
 @end

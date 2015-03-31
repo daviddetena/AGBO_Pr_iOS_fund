@@ -13,34 +13,41 @@
 
 @import UIKit;
 
-@interface DTCLibraryTableViewController ()
-
-@end
 
 @implementation DTCLibraryTableViewController
 
 #pragma mark - Instance init
 - (id) initWithModel:(DTCLibrary *)model style:(UITableViewStyle)aStyle{
     if(self = [super initWithStyle:aStyle]){
-        self.model = model;
-        self.favoriteBooks = [NSMutableArray arrayWithCapacity:0];
+        _model = model;
+        _favoriteBooks = [NSMutableArray arrayWithCapacity:0];
         self.title = @"Nerds library";
     }
     return self;
 }
 
 #pragma mark - View Lifecycle
+
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    //[self syncModelWithView];
     
+    // Suscribe to notification the book sends when toggling its favorite status
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter addObserver:self selector:@selector(notifyThatBookDidToggleFavorite:) name:NOTIF_NAME_BOOK_TOGGLE_FAVORITE object:nil];
 }
+
 
 #pragma mark - Memory
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)dealloc{
+    // Unsuscribe from notifications when deallocating
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
 
 #pragma mark - Table view data source
 // The table will have as much sections as tags in the library and one more for favorites
@@ -122,7 +129,7 @@
 // Show the book of the current indexPath
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    // Tell the delegate (Book Model) that the model has changed
+    // Get the current selected book
     DTCBook *book = [self bookAtIndexPath:indexPath];
     
     // Notify the delegate (book model) that the model has changed (only if the delegate understands the message [implements it])
@@ -130,7 +137,7 @@
         [self.delegate libraryTableViewController:self didSelectBook:book];
     }
     
-    // Notify the PDFViewer that the model has changed through notifications. Send the new selected book
+    // Notify the PDFViewer through notifications that the model has changed. Send the new selected book
     NSNotification *notification = [NSNotification notificationWithName:NOTIF_NAME_BOOK_SELECTED_PDF_URL object:self userInfo:@{NOTIF_KEY_BOOK:book}];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
@@ -149,11 +156,34 @@
     return book;
 }
 
+
 #pragma mark - Auto delegate (por iphones)
 // Push the detail view controller of the book selected
 - (void) libraryTableViewController:(DTCLibraryTableViewController *)libraryVC didSelectBook:(DTCBook *)aBook{
     DTCBookViewController *bookVC = [[DTCBookViewController alloc]initWithModel:aBook];
     [self.navigationController pushViewController:bookVC animated:YES];
+}
+
+#pragma mark - Notifications
+- (void) notifyThatBookDidToggleFavorite: (NSNotification *) notification{
+    // Get the book
+    NSDictionary *dict = [notification userInfo];
+    DTCBook *book = [dict objectForKey:NOTIF_KEY_BOOK_FAVORITE];
+    
+    // Check favorite status and add/remove it from favorites
+    if (book.favorite) {
+        if (![self.favoriteBooks containsObject:book]) {
+            [self.favoriteBooks addObject:book];
+        }
+    }
+    else{
+        if ([self.favoriteBooks containsObject:book]) {
+            [self.favoriteBooks removeObject:book];
+        }
+    }
+    
+    // Reload table data
+    [self.tableView reloadData];
 }
 
 @end

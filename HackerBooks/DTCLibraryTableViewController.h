@@ -31,7 +31,7 @@
 // Library model and array of favorites
 @property (strong,nonatomic) DTCLibrary *model;
 @property (strong,nonatomic) NSMutableArray *favoriteBooks;
-// Delegate => will be the DTCBookVC
+// Delegate => will be the DTCBookVC for iPad and self for iPhone
 @property (weak,nonatomic) id<DTCLibraryTableViewControllerDelegate> delegate;
 
 

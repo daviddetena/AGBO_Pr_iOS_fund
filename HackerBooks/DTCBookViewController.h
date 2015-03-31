@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "DTCLibraryTableViewController.h"
 
+#define NOTIF_NAME_BOOK_TOGGLE_FAVORITE @"bookToggleFavorite"
+#define NOTIF_KEY_BOOK_FAVORITE @"bookFavorite"
+
 // Forward declaration
 @class DTCBook;
 

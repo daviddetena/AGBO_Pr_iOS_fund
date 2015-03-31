@@ -97,8 +97,12 @@
     if ([arrayOfBooks count]==0) {
         return nil;
     }
-    NSArray *booksForTag = [NSArray arrayWithArray:arrayOfBooks];
-    return booksForTag;
+    
+    // Set a custom sort rule to sort books by title
+    NSSortDescriptor *firstDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+    NSArray *sortDescriptors = [NSArray arrayWithObjects:firstDescriptor, nil];
+    NSArray *sortedBooks = [arrayOfBooks sortedArrayUsingDescriptors:sortDescriptors];
+    return sortedBooks;
 }
 
 // Book at a specified index with a specific tag. Returns nil if index or
