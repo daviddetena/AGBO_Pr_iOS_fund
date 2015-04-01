@@ -26,16 +26,24 @@
     
     // First run => save key LAST_SELECTED_BOOK to be the first to be displayed when the app relaunches. download JSON
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSArray *libraryArray = nil;
     if(![defaults objectForKey:LAST_SELECTED_BOOK]){
+        // Set up for first launch
+        libraryArray = [self configureModelForFirstLaunch];
+        
         // Set default value: first element of second section (first is favorites)
         [defaults setObject:@[@1,@0] forKey:LAST_SELECTED_BOOK];
         
         // Save manually
         [defaults synchronize];
     }
+    else{
+        // Load data from Sandbox
+        libraryArray = [self loadModelFromSandbox];
+    }
     
-    // Load the model of library
-    DTCLibrary *library = [[DTCLibrary alloc]init];
+    // Load the model of library (either from JSON or from Sandbox)
+    DTCLibrary *library = [[DTCLibrary alloc]initWithArray:libraryArray];
     
     // Configure according the device
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
@@ -72,6 +80,8 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
+
+
 
 #pragma mark - Settings
 - (void)configureForPadWithModel:(DTCLibrary *)model{
@@ -121,5 +131,232 @@
     }
     return book;
 }
+
+
+
+- (NSArray *)configureModelForFirstLaunch{
+    // Array of dictionaries with updated image path
+    NSMutableArray *newJSONModel = nil;
+    NSData *newJSONData = nil;
+    
+    // Get data from a remote resource via JSON
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:JSON_API_URL]];
+    
+    // Get response from server dealing with errors
+    NSURLResponse *response = [[NSURLResponse alloc]init];
+    NSError *error;
+    NSData *modelData = [NSURLConnection sendSynchronousRequest:request
+                                              returningResponse:&response
+                                                          error:&error];
+    
+    if (modelData!=nil) {
+        id JSONObjects = [NSJSONSerialization JSONObjectWithData:modelData
+                                                         options:kNilOptions
+                                                           error:&error];
+        if (JSONObjects!=nil) {
+            // Data parsed successfully => Create an Array of NSDictionary
+            if ([JSONObjects isKindOfClass:[NSArray class]]) {
+                
+                // Initialize new JSON model
+                newJSONModel = [NSMutableArray arrayWithCapacity:[JSONObjects count]];
+                
+                for (NSDictionary *dict in JSONObjects) {
+                    // Request image
+                    NSURLRequest *imageURLRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:[dict objectForKey:@"image_url"]]];
+                    
+                    // Get response from server dealing with errors
+                    NSURLResponse *imageURLResponse = [[NSURLResponse alloc]init];
+                    NSError *error;
+                    NSData *imageData = [NSURLConnection sendSynchronousRequest:imageURLRequest
+                                                              returningResponse:&imageURLResponse
+                                                                          error:&error];
+//                    
+//                    NSURL *imageURL = [NSURL URLWithString:[dict objectForKey:@"image_url"]];
+//                    NSData *imageData = [NSData dataWithContentsOfURL:imageURL
+//                                                              options:kNilOptions
+//                                                                error:&error];
+                    
+                    if (!imageData) {
+                        NSLog(@"Error %@ when fetching image '%@'", error.localizedDescription,[dict objectForKey:@"image_url"]);
+                    }
+                    else{
+                        // Get local path for image and save it
+                        NSURL *localImage = [self localImageURLFromRemoteURL:[dict objectForKey:@"image_url"]];
+                        [self saveImage:imageData toSandboxURL:localImage];
+                        
+                        // Update image_url path to local. Create a new dictionary for every book with its updated image_url and add to the new array of dictionaries
+                        DTCBook *book = [[DTCBook alloc]initWithDictionary:dict];
+                        book.photoURL = localImage;
+                        NSDictionary *bookDictionary = [book proxyForJSON];
+                        [newJSONModel addObject:bookDictionary];
+                        
+                        // Parse the array of dictionaries as JSON and save it in /Documents
+                        newJSONData = [NSJSONSerialization dataWithJSONObject:newJSONModel
+                                                                              options:NSJSONWritingPrettyPrinted
+                                                                                error:&error];
+                        if (newJSONModel == nil) {
+                            NSLog(@"Error %@ when parsing new model to JSON", error.localizedDescription);
+                        }
+                    }
+                }
+            }
+            // Save updated library model (via JSON) in Sandbox
+            [self saveModelToSandbox:newJSONData];
+        }
+        else{
+            NSLog(@"Error while parsing JSON: %@",error.localizedDescription);
+        }
+    }
+    else{
+        // No data or error
+        NSLog(@"Error while downloading JSON from server: %@",error.localizedDescription);
+    }
+    // Return the array of dictionaries with the updated image_url
+    return newJSONModel;
+}
+
+
+
+- (NSURL *) localImageURLFromRemoteURL: (NSString *) remoteURLString{
+    NSString *cleanURL = [self cleanRemoteURLString:remoteURLString];
+    NSURL *documentURL = [self defaultSandboxURLForType:@"docs"];
+    NSURL *localImageURL = [documentURL URLByAppendingPathComponent:cleanURL];
+    /*
+    NSURL *imagesURL = [documentURL URLByAppendingPathComponent:@"/images"];
+    NSURL *localImageURL = nil;
+    
+    BOOL ec = NO;
+    NSError *error;
+    
+    // Create a folder for the book images
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[imagesURL path]]){
+        ec = [[NSFileManager defaultManager] createDirectoryAtPath:[imagesURL path]
+                                       withIntermediateDirectories:NO
+                                                        attributes:nil
+                                                             error:&error];
+        if (!ec) {
+            // No errors. Save in /Documents/images
+            localImageURL = [NSURL URLWithString:[imagesURL path]];
+        }
+        else{
+            // Couldn't create /Document/image directory. Save in /Documents
+            NSLog(@"Error. Couldn't create /images directory");
+            localImageURL = [NSURL URLWithString:[documentURL path]];
+        }
+        
+        // Add image filename to the folder path
+        localImageURL = [localImageURL URLByAppendingPathComponent:cleanURL];
+    }
+     */
+    return localImageURL;
+}
+
+- (void) saveImage: (NSData *) imageData toSandboxURL: (NSURL *) localURL{
+    NSError *error;
+    BOOL ec = NO;
+    
+    // Save image in local directory
+    ec = [imageData writeToURL:localURL
+                       options:kNilOptions
+                         error:&error];
+    
+    // Error when saving image
+    if (ec==NO) {
+        NSLog(@"Error %@. Couldn't save image at %@", error.localizedDescription,[localURL path]);
+    }
+    else{
+        // Initialize every book with its local image path
+        
+        NSLog(@"Image successfully downloaded to %@", [localURL path]);
+    }
+}
+
+
+#pragma mark - Sandbox
+// NSURL with the default sandbox folder to save data (cache
+- (NSURL *) defaultSandboxURLForType: (NSString *) aType{
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSURL *url = nil;
+    
+    if ([aType isEqualToString:@"docs"]) {
+        url = [[manager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+        //NSLog(@"Documents folder");
+    }
+    else if ([aType isEqualToString:@"cache"]){
+        url = [[manager URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] lastObject];
+        //NSLog(@"Caches folder");
+    }
+    else{
+        // Save in tmp folder by default
+        url = [[manager URLsForDirectory:NSDownloadsDirectory inDomains:NSUserDomainMask] lastObject];
+        //NSLog(@"Downloads folder");
+    }
+    return url;
+}
+
+
+
+
+- (void) saveModelToSandbox: (NSData *) modelData{
+    // Save JSON model in a file of the app Documents directory
+    NSURL *url = [self defaultSandboxURLForType:@"docs"];
+    url = [url URLByAppendingPathComponent:@"library.txt"];
+    NSError *error;
+    BOOL ec = NO;
+    ec = [modelData writeToURL:url
+                       options:kNilOptions
+                         error:&error];
+    if (!ec) {
+        // Error when saving
+        NSLog(@"Error when saving model to Sandbox: %@",error.localizedDescription);
+    }
+    else{
+        // Saved successfully
+        NSLog(@"JSON updated model saved successfully to sandbox");
+    }
+}
+
+- (NSArray *) loadModelFromSandbox{
+    NSURL *url = [self defaultSandboxURLForType:@"docs"];
+    url = [url URLByAppendingPathComponent:@"library.txt"];
+    
+    NSError *error;
+    NSData *modelData = [NSData dataWithContentsOfURL:url
+                                              options:kNilOptions
+                                                error:&error];
+    NSArray *libraryArray = nil;
+    if (!modelData) {
+        // Error when loading
+        NSLog(@"Error when loading from Sandbox: %@",error.localizedDescription);
+    }
+    else{
+        // Loaded successfully
+        NSLog(@"JSON model successfully loaded from sandbox");
+        // Convert this data into an array of Dictionaries
+        id JSONObjects = [NSJSONSerialization JSONObjectWithData:modelData
+                                                         options:kNilOptions
+                                                           error:&error];
+        // Data parsed successfully => Create an Array of NSDictionary
+        if ([JSONObjects isKindOfClass:[NSArray class]]) {
+            libraryArray = [NSArray arrayWithArray:JSONObjects];
+        }
+    }
+    return libraryArray;
+}
+
+- (NSString *) cleanRemoteURLString: (NSString *) remoteURLString{
+    // Clean slashes from remote url filepath
+    NSMutableString *path = [NSMutableString stringWithString:remoteURLString];
+    [path deleteCharactersInRange:[path rangeOfString:@"http://"]];
+    NSString *tmpStr = [path stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
+    
+    return tmpStr;
+}
+
+
+
+
+
+#pragma mark - Network
 
 @end

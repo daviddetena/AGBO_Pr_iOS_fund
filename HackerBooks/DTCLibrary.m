@@ -35,6 +35,22 @@
 #pragma mark - Class init
 
 #pragma mark - Instance init
+- (id) initWithArray:(NSArray *)arrayOfModels{
+    if (self = [super init]) {
+        // Init books and tags arrays
+        self.books = [NSMutableArray arrayWithCapacity:[arrayOfModels count]];
+        self.auxTags = [[NSMutableArray alloc]init];
+        
+        for (NSDictionary *dict in arrayOfModels) {
+            // Create books from dictionary. Add the books and new tags from them to the library
+            DTCBook *book = [[DTCBook alloc] initWithDictionary:dict];
+            [self.books addObject:book];
+            [self addTagsFromArray:book.tags];
+        }
+    }
+    return self;
+}
+/*
 - (id) init{
     if(self = [super init]){
         // Initialize model
@@ -79,6 +95,7 @@
     }
     return self;
 }
+ */
 
 #pragma mark - Instance methods
 

@@ -55,8 +55,8 @@
     
     if(self = [super init]){
         _title = aTitle;
-        _authors = [self extractFromString:stringOfAuthors];
-        _tags = [self extractFromString:stringOfTags];
+        _authors = [self extractItemsFromString:stringOfAuthors];
+        _tags = [self extractItemsFromString:stringOfTags];
         _photoURL = aPhotoURL;
         _pdfURL = aPdfURL;
     }
@@ -75,29 +75,38 @@
 #pragma mark - Utils
 
 // Utility method to extrac authors/tags from NSString and add to an array
--(NSArray *) extractFromString: (NSString *)string{
+-(NSArray *) extractItemsFromString: (NSString *)string{
     NSArray *arrayStrings = [string componentsSeparatedByString:@", "];
     return arrayStrings;
 }
 
 // Returns a string containing all the objects in the array, separated by comma
--(NSString *) convertToString: (NSArray *) anArray{
+-(NSString *) stringOfItemsFromArray: (NSArray *) anArray{
     NSString *string = @"";
     for (NSString *str in anArray) {
         string = [string stringByAppendingString:str];
         string = [string stringByAppendingString:@", "];
     }
-    return string;
+    NSString *stringOfItems = [string substringWithRange:NSMakeRange(0,[string length]-2)];
+    return stringOfItems;
+}
+
+- (NSString *) urlPathWithBackslashesDeletedFromPath: (NSURL *) aPath{
+    // Clean slashes from remote url filepath
+    NSMutableString *path = [NSMutableString stringWithString:[aPath absoluteString]];
+    NSString *clearPath = [path stringByReplacingOccurrencesOfString:@"\\" withString:@""];
+    
+    return clearPath;
 }
 
 #pragma mark - JSON
 // Turn an object of this class into a NSDictionary to use it to create a JSON
 - (NSDictionary *) proxyForJSON{
     return @{@"title"       : self.title,
-             @"authors"     : self.authors,
-             @"tags"        : self.tags,
-             @"image_url"   : [self.photoURL path],
-             @"pdf_url"     : [self.pdfURL path]};
+             @"authors"     : [self stringOfItemsFromArray:self.authors],
+             @"tags"        : [self stringOfItemsFromArray:self.tags],
+             @"image_url"   : [self urlPathWithBackslashesDeletedFromPath:self.photoURL],
+             @"pdf_url"     : [self urlPathWithBackslashesDeletedFromPath:self.pdfURL]};
 }
 
 @end

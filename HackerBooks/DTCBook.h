@@ -42,7 +42,7 @@
 #pragma mark - Utils
 // Used to include every tag/author into a string that will be displayed
 // in the Authors UILabel
-- (NSString *) convertToString: (NSArray *) anArray;
+- (NSString *) stringOfItemsFromArray: (NSArray *) anArray;
 
 #pragma mark - JSON
 // Turn an object of this class into a NSDictionary to use it to create a JSON

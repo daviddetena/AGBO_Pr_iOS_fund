@@ -120,7 +120,7 @@
     // Configure cell
     cell.imageView.image = book.photo;
     cell.textLabel.text = book.title;
-    cell.detailTextLabel.text = [book convertToString:book.authors];
+    cell.detailTextLabel.text = [book stringOfItemsFromArray:book.authors];
     
     // Return cell with the book
     return cell;

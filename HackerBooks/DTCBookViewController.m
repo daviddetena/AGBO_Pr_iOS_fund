@@ -69,8 +69,8 @@
 #pragma mark - Utils
 - (void) syncModelWithView{
     self.titleLabel.text = self.model.title;
-    self.authorsLabel.text = [self.model convertToString:self.model.authors];
-    self.tagsLabel.text = [self.model convertToString:self.model.tags];
+    self.authorsLabel.text = [self.model stringOfItemsFromArray:self.model.authors];
+    self.tagsLabel.text = [self.model stringOfItemsFromArray:self.model.tags];
     
     /*
     self.titleLabel.numberOfLines = 0;

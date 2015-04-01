@@ -116,7 +116,7 @@
 				596A400A1AC5B5490040A8AE /* Images.xcassets */,
 				596A400C1AC5B5490040A8AE /* LaunchScreen.xib */,
 				596A40031AC5B5490040A8AE /* Supporting Files */,
-				597844E51ACAB62800384B49 /* Settings.h */,
+				597844E61ACAE29000384B49 /* Helpers */,
 			);
 			path = HackerBooks;
 			sourceTree = "<group>";
@@ -186,6 +186,14 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		597844E61ACAE29000384B49 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				597844E51ACAB62800384B49 /* Settings.h */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -235,6 +243,7 @@
 				TargetAttributes = {
 					596A3FFF1AC5B5490040A8AE = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = QF5L9JVR92;
 					};
 					596A40121AC5B5490040A8AE = {
 						CreatedOnToolsVersion = 6.2;
@@ -415,9 +424,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = HackerBooks/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -426,9 +438,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = HackerBooks/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
