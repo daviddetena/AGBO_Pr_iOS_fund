@@ -23,6 +23,7 @@
 		596A40381AC5C5840040A8AE /* favorite-outline@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 596A40321AC5C5840040A8AE /* favorite-outline@3x.png */; };
 		596A403D1AC5C8780040A8AE /* DTCSimplePDFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 596A403B1AC5C8780040A8AE /* DTCSimplePDFViewController.m */; };
 		596A403E1AC5C8780040A8AE /* DTCSimplePDFViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 596A403C1AC5C8780040A8AE /* DTCSimplePDFViewController.xib */; };
+		59764C031ACC500700066F13 /* DTCSandboxURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 59764C021ACC500700066F13 /* DTCSandboxURL.m */; };
 		5976703A1AC938560018DD03 /* DTCLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 597670391AC938560018DD03 /* DTCLibrary.m */; };
 		5976703D1AC945010018DD03 /* DTCLibraryTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5976703C1AC945010018DD03 /* DTCLibraryTableViewController.m */; };
 /* End PBXBuildFile section */
@@ -62,6 +63,8 @@
 		596A403A1AC5C8780040A8AE /* DTCSimplePDFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTCSimplePDFViewController.h; sourceTree = "<group>"; };
 		596A403B1AC5C8780040A8AE /* DTCSimplePDFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTCSimplePDFViewController.m; sourceTree = "<group>"; };
 		596A403C1AC5C8780040A8AE /* DTCSimplePDFViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DTCSimplePDFViewController.xib; sourceTree = "<group>"; };
+		59764C011ACC500700066F13 /* DTCSandboxURL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTCSandboxURL.h; sourceTree = "<group>"; };
+		59764C021ACC500700066F13 /* DTCSandboxURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTCSandboxURL.m; sourceTree = "<group>"; };
 		597670381AC938560018DD03 /* DTCLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTCLibrary.h; sourceTree = "<group>"; };
 		597670391AC938560018DD03 /* DTCLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTCLibrary.m; sourceTree = "<group>"; };
 		5976703B1AC945010018DD03 /* DTCLibraryTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTCLibraryTableViewController.h; sourceTree = "<group>"; };
@@ -190,6 +193,8 @@
 			isa = PBXGroup;
 			children = (
 				597844E51ACAB62800384B49 /* Settings.h */,
+				59764C011ACC500700066F13 /* DTCSandboxURL.h */,
+				59764C021ACC500700066F13 /* DTCSandboxURL.m */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -309,6 +314,7 @@
 				596A40061AC5B5490040A8AE /* main.m in Sources */,
 				596A403D1AC5C8780040A8AE /* DTCSimplePDFViewController.m in Sources */,
 				596A402A1AC5BE140040A8AE /* DTCBookViewController.m in Sources */,
+				59764C031ACC500700066F13 /* DTCSandboxURL.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

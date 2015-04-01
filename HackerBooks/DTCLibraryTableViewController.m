@@ -144,6 +144,8 @@
     
     // Save current book in NSUserDefaults
     [self saveLastSelectedBookAtIndexPath:indexPath];
+    
+    NSLog(@"Image path: %@",[book.photoURL absoluteString]);
 }
 
 

@@ -8,6 +8,7 @@
 
 @import UIKit;
 #import "DTCBook.h"
+#import "DTCSandboxURL.h"
 
 @implementation DTCBook
 
@@ -68,7 +69,7 @@
     return [self initWithTitle:[aDictionary objectForKey:@"title"]
                        authors:[aDictionary objectForKey:@"authors"]
                           tags:[aDictionary objectForKey:@"tags"]
-                      photoURL:[NSURL URLWithString:[aDictionary objectForKey:@"image_url"]]
+                      photoURL:[DTCSandboxURL urlToDocumentsFolder: [aDictionary objectForKey:@"image_url"]]
                         pdfURL:[NSURL URLWithString:[aDictionary objectForKey:@"pdf_url"]]];
 }
 

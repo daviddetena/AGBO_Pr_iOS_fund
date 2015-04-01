@@ -181,12 +181,17 @@
                     }
                     else{
                         // Get local path for image and save it
-                        NSURL *localImage = [self localImageURLFromRemoteURL:[dict objectForKey:@"image_url"]];
-                        [self saveImage:imageData toSandboxURL:localImage];
+                        NSURL *imageRemoteURL = [NSURL URLWithString:[dict objectForKey:@"image_url"]];
+                        NSString *imageFilename = [imageRemoteURL lastPathComponent];
+                                                 
+                                                 
+ //                       NSURL *localImage = [self localImageURLFromRemoteURL:imageRemoteURL];
+                        [self saveImageInSandbox:imageData withFilename:imageFilename];
                         
                         // Update image_url path to local. Create a new dictionary for every book with its updated image_url and add to the new array of dictionaries
                         DTCBook *book = [[DTCBook alloc]initWithDictionary:dict];
-                        book.photoURL = localImage;
+                        
+                        book.photoURL = [NSURL URLWithString:imageFilename];
                         NSDictionary *bookDictionary = [book proxyForJSON];
                         [newJSONModel addObject:bookDictionary];
                         
@@ -215,13 +220,29 @@
     return newJSONModel;
 }
 
+// Load image from sandbox
+- (NSURL *) urlSandboxForImageWithFilename: (NSString *) filename{
+    NSURL *url = [self defaultSandboxURLForType:@"docs"];
+    url = [url URLByAppendingPathComponent:filename];
+    
+    return url;
+}
 
-
-- (NSURL *) localImageURLFromRemoteURL: (NSString *) remoteURLString{
+/*
+- (NSURL *) localImageURLFromRemoteURL: (NSURL *) remoteURL{
+    NSString *filename = [remoteURL lastPathComponent];
+    
+    
+    
+    
     NSString *cleanURL = [self cleanRemoteURLString:remoteURLString];
     NSURL *documentURL = [self defaultSandboxURLForType:@"docs"];
     NSURL *localImageURL = [documentURL URLByAppendingPathComponent:cleanURL];
-    /*
+    
+    NSString *fileName = [localImageURL url]
+    
+    
+    
     NSURL *imagesURL = [documentURL URLByAppendingPathComponent:@"/images"];
     NSURL *localImageURL = nil;
     
@@ -247,27 +268,32 @@
         // Add image filename to the folder path
         localImageURL = [localImageURL URLByAppendingPathComponent:cleanURL];
     }
-     */
+ 
     return localImageURL;
 }
 
-- (void) saveImage: (NSData *) imageData toSandboxURL: (NSURL *) localURL{
+ */
+- (void) saveImageInSandbox: (NSData *) imageData withFilename: (NSString *) filename{
+    // Save image in /Documents
+    NSURL *url = [self defaultSandboxURLForType:@"docs"];
+    url = [url URLByAppendingPathComponent:filename];
+    
     NSError *error;
     BOOL ec = NO;
     
     // Save image in local directory
-    ec = [imageData writeToURL:localURL
+    ec = [imageData writeToURL:url
                        options:kNilOptions
                          error:&error];
     
     // Error when saving image
     if (ec==NO) {
-        NSLog(@"Error %@. Couldn't save image at %@", error.localizedDescription,[localURL path]);
+        NSLog(@"Error %@. Couldn't save image at %@", error.localizedDescription,[url path]);
     }
     else{
         // Initialize every book with its local image path
         
-        NSLog(@"Image successfully downloaded to %@", [localURL path]);
+        NSLog(@"Image successfully downloaded to %@", [url path]);
     }
 }
 
