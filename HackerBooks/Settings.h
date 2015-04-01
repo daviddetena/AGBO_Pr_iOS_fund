@@ -10,5 +10,6 @@
 #define HackerBooks_Settings_h
 #define LAST_SELECTED_BOOK @"lastBook"
 #define JSON_API_URL @"https://keepcodigtest.blob.core.windows.net/containerblobstest/books_readable.json"
+#define SANDBOX_MODEL_FILENAME @"library.txt"
 
 #endif

@@ -69,7 +69,7 @@
     return [self initWithTitle:[aDictionary objectForKey:@"title"]
                        authors:[aDictionary objectForKey:@"authors"]
                           tags:[aDictionary objectForKey:@"tags"]
-                      photoURL:[DTCSandboxURL urlToDocumentsFolder: [aDictionary objectForKey:@"image_url"]]
+                      photoURL:[DTCSandboxURL URLToDocumentsCustomFolder:@"images" forFilename:[aDictionary objectForKey:@"image_url"]]
                         pdfURL:[NSURL URLWithString:[aDictionary objectForKey:@"pdf_url"]]];
 }
 

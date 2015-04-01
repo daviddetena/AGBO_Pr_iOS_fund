@@ -12,6 +12,7 @@
 #import "DTCLibrary.h"
 #import "DTCLibraryTableViewController.h"
 #import "Settings.h"
+#import "DTCSandboxURL.h"
 
 @interface AppDelegate ()
 
@@ -220,64 +221,12 @@
     return newJSONModel;
 }
 
-// Load image from sandbox
-- (NSURL *) urlSandboxForImageWithFilename: (NSString *) filename{
-    NSURL *url = [self defaultSandboxURLForType:@"docs"];
-    url = [url URLByAppendingPathComponent:filename];
-    
-    return url;
-}
 
-/*
-- (NSURL *) localImageURLFromRemoteURL: (NSURL *) remoteURL{
-    NSString *filename = [remoteURL lastPathComponent];
-    
-    
-    
-    
-    NSString *cleanURL = [self cleanRemoteURLString:remoteURLString];
-    NSURL *documentURL = [self defaultSandboxURLForType:@"docs"];
-    NSURL *localImageURL = [documentURL URLByAppendingPathComponent:cleanURL];
-    
-    NSString *fileName = [localImageURL url]
-    
-    
-    
-    NSURL *imagesURL = [documentURL URLByAppendingPathComponent:@"/images"];
-    NSURL *localImageURL = nil;
-    
-    BOOL ec = NO;
-    NSError *error;
-    
-    // Create a folder for the book images
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[imagesURL path]]){
-        ec = [[NSFileManager defaultManager] createDirectoryAtPath:[imagesURL path]
-                                       withIntermediateDirectories:NO
-                                                        attributes:nil
-                                                             error:&error];
-        if (!ec) {
-            // No errors. Save in /Documents/images
-            localImageURL = [NSURL URLWithString:[imagesURL path]];
-        }
-        else{
-            // Couldn't create /Document/image directory. Save in /Documents
-            NSLog(@"Error. Couldn't create /images directory");
-            localImageURL = [NSURL URLWithString:[documentURL path]];
-        }
-        
-        // Add image filename to the folder path
-        localImageURL = [localImageURL URLByAppendingPathComponent:cleanURL];
-    }
- 
-    return localImageURL;
-}
-
- */
 - (void) saveImageInSandbox: (NSData *) imageData withFilename: (NSString *) filename{
     // Save image in /Documents
-    NSURL *url = [self defaultSandboxURLForType:@"docs"];
-    url = [url URLByAppendingPathComponent:filename];
-    
+//    NSURL *url = [self defaultSandboxURLForType:@"docs"];
+//    url = [url URLByAppendingPathComponent:filename];
+    NSURL *url = [DTCSandboxURL URLToDocumentsCustomFolder:@"images" forFilename:filename];
     NSError *error;
     BOOL ec = NO;
     
@@ -325,8 +274,10 @@
 
 - (void) saveModelToSandbox: (NSData *) modelData{
     // Save JSON model in a file of the app Documents directory
-    NSURL *url = [self defaultSandboxURLForType:@"docs"];
-    url = [url URLByAppendingPathComponent:@"library.txt"];
+//    NSURL *url = [self defaultSandboxURLForType:@"docs"];
+//    url = [url URLByAppendingPathComponent:@"library.txt"];
+//    
+    NSURL *url = [DTCSandboxURL URLToDocumentsFolderForFilename:SANDBOX_MODEL_FILENAME];
     NSError *error;
     BOOL ec = NO;
     ec = [modelData writeToURL:url
@@ -343,9 +294,10 @@
 }
 
 - (NSArray *) loadModelFromSandbox{
-    NSURL *url = [self defaultSandboxURLForType:@"docs"];
-    url = [url URLByAppendingPathComponent:@"library.txt"];
+//    NSURL *url = [self defaultSandboxURLForType:@"docs"];
+//    url = [url URLByAppendingPathComponent:@"library.txt"];
     
+    NSURL *url = [DTCSandboxURL URLToDocumentsFolderForFilename:SANDBOX_MODEL_FILENAME];
     NSError *error;
     NSData *modelData = [NSData dataWithContentsOfURL:url
                                               options:kNilOptions
@@ -370,6 +322,7 @@
     return libraryArray;
 }
 
+/*
 - (NSString *) cleanRemoteURLString: (NSString *) remoteURLString{
     // Clean slashes from remote url filepath
     NSMutableString *path = [NSMutableString stringWithString:remoteURLString];
@@ -378,7 +331,7 @@
     
     return tmpStr;
 }
-
+*/
 
 
 

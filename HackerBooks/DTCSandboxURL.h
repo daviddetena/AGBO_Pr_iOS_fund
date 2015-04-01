@@ -19,8 +19,9 @@
 + (instancetype) sandboxURLWithString: (NSString *) URLString;
 + (instancetype) sandboxURLWithFilename: (NSString *) aFilename;
  */
-+ (NSURL *) urlToDocumentsFolder: (NSString *) aFilename;
-+ (NSURL *) urlToCacheFolder: (NSString *) aFilename;
++ (NSURL *) URLToDocumentsFolderForFilename: (NSString *) aFilename;
++ (NSURL *) URLToDocumentsCustomFolder: (NSString *) aFolder forFilename: (NSString *) aFilename;
++ (NSURL *) URLToCacheFolderForFilename: (NSString *) aFilename;
 + (NSURL *) URLToFolder: (NSString *) aFolder;
 
 #pragma mark - Init

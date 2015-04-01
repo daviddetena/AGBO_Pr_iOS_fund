@@ -21,13 +21,42 @@
 }
  */
 
-+ (NSURL *) urlToDocumentsFolder: (NSString *) aFilename{
++ (NSURL *) URLToDocumentsFolderForFilename: (NSString *) aFilename{
     NSURL *url = [self URLToFolder:@"docs"];
     url = [url URLByAppendingPathComponent:aFilename];
     return url;
 }
 
-+ (NSURL *) urlToCacheFolder: (NSString *) aFilename{
++ (NSURL *) URLToDocumentsCustomFolder: (NSString *) aFolder forFilename: (NSString *) aFilename{
+    // Create new folder into Documents folder
+    NSURL *url = [self URLToFolder:@"docs"];
+    NSURL *newFolder = [url URLByAppendingPathComponent:aFolder];
+    NSURL *path = nil;
+    
+    BOOL ec = NO;
+    NSError *error;
+    
+    // Create a folder for the book images
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[newFolder path]]){
+        ec = [[NSFileManager defaultManager] createDirectoryAtPath:[newFolder path]
+                                       withIntermediateDirectories:NO
+                                                        attributes:nil
+                                                             error:&error];
+        if (!ec) {
+            NSLog(@"Couldn't create new folder in /Documents");
+            path = [self URLToDocumentsFolderForFilename:aFilename];
+        }
+        else{
+            path = [newFolder URLByAppendingPathComponent:aFilename];
+        }
+    }
+    else{
+        path = [newFolder URLByAppendingPathComponent:aFilename];
+    }
+    return path;
+}
+
++ (NSURL *) URLToCacheFolderForFilename: (NSString *) aFilename{
     NSURL *url = [self URLToFolder:@"cache"];
     url = [url URLByAppendingPathComponent:aFilename];
     return url;
