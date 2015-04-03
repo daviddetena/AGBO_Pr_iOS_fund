@@ -75,6 +75,17 @@
     return url;
 }
 
+// Get only the filename from a url
++ (NSString *) filenameFromURL: (NSURL *) aURL{
+    NSArray *urlParts = [[aURL path] componentsSeparatedByString:@"/"];
+    if ([urlParts lastObject]) {
+        return [urlParts lastObject];
+    }
+    else{
+        return [aURL path];
+    }
+}
+
 /*
 #pragma mark - Init
 - (id) initWithString: (NSString *) aString{

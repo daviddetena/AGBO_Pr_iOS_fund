@@ -183,7 +183,7 @@
                     else{
                         // Get local path for image and save it
                         NSURL *imageRemoteURL = [NSURL URLWithString:[dict objectForKey:@"image_url"]];
-                        NSString *imageFilename = [imageRemoteURL lastPathComponent];
+                        NSString *imageFilename = [DTCSandboxURL filenameFromURL:imageRemoteURL];
                                                  
                                                  
  //                       NSURL *localImage = [self localImageURLFromRemoteURL:imageRemoteURL];
@@ -226,7 +226,7 @@
     // Save image in /Documents
 //    NSURL *url = [self defaultSandboxURLForType:@"docs"];
 //    url = [url URLByAppendingPathComponent:filename];
-    NSURL *url = [DTCSandboxURL URLToDocumentsCustomFolder:@"images" forFilename:filename];
+    NSURL *url = [DTCSandboxURL URLToDocumentsCustomFolder:@"Images" forFilename:filename];
     NSError *error;
     BOOL ec = NO;
     

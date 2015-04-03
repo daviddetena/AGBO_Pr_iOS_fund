@@ -33,6 +33,8 @@
     NSNotificationCenter *defCenter = [NSNotificationCenter defaultCenter];
     [defCenter addObserver:self selector:@selector(notifyThatBookDidToggleFavorite:) name:NOTIF_NAME_BOOK_TOGGLE_FAVORITE object:nil];
     
+    
+    
     [self syncModelWithView];
     
 }

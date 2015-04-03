@@ -23,6 +23,7 @@
 + (NSURL *) URLToDocumentsCustomFolder: (NSString *) aFolder forFilename: (NSString *) aFilename;
 + (NSURL *) URLToCacheFolderForFilename: (NSString *) aFilename;
 + (NSURL *) URLToFolder: (NSString *) aFolder;
++ (NSString *) filenameFromURL: (NSURL *) aURL;
 
 #pragma mark - Init
 /*

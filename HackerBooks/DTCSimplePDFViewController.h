@@ -11,12 +11,13 @@
 // Forward declaration
 @class DTCBook;
 
-@interface DTCSimplePDFViewController : UIViewController<UIWebViewDelegate>
+@interface DTCSimplePDFViewController : UIViewController<UIWebViewDelegate, NSURLConnectionDelegate>
 
 #pragma mark - Properties
 @property (weak,nonatomic) IBOutlet UIWebView *browser;
 @property (weak,nonatomic) IBOutlet UIActivityIndicatorView *activityView;
 @property (strong,nonatomic) DTCBook *model;
+@property (strong,nonatomic) NSURLConnection *urlConnection;
 
 #pragma mark - Init
 - (id) initWithModel:(DTCBook *) aModel;
