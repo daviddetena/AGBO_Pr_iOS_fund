@@ -11,6 +11,8 @@
 #import "DTCBookViewController.h"
 #import "DTCLibrary.h"
 #import "Settings.h"
+#import "DTCSimplePDFViewController.h"
+#import "DTCSandboxURL.h"
 
 @import UIKit;
 
@@ -32,9 +34,13 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    // Suscribe to notification the book sends when toggling its favorite status
+    // Suscribe to notification the book sends when toggling its favorite status and that the pdf url of model has changed
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter addObserver:self selector:@selector(notifyThatBookDidToggleFavorite:) name:NOTIF_NAME_BOOK_TOGGLE_FAVORITE object:nil];
+    [defaultCenter addObserver:self selector:@selector(notifyThatBookPdfURLDidChange:) name:NOTIF_KEY_URL_PDF_CHANGE object:nil];
+    
+    // Save in Sandbox the JSON version of updated model
+    [self saveModelInSandbox];
 }
 
 
@@ -145,7 +151,8 @@
     // Save current book in NSUserDefaults
     [self saveLastSelectedBookAtIndexPath:indexPath];
     
-    NSLog(@"Image path: %@",[book.photoURL absoluteString]);
+    NSLog(@"PDF path in library: %@",[book.pdfURL absoluteString]);
+    NSLog(@"IMAGE path in library: %@",[book.photoURL absoluteString]);
 }
 
 
@@ -192,6 +199,23 @@
     [self.tableView reloadData];
 }
 
+
+// Notification received from SimplePDFVC
+- (void) notifyThatBookPdfURLDidChange: (NSNotification *) notification{
+    // Get the book
+    NSDictionary *dict = [notification userInfo];
+    DTCBook *book = [dict objectForKey:NOTIF_KEY_URL_PDF_CHANGE];
+
+    // Update the book in the array
+    for (DTCBook *each in self.model.books) {
+        if ([each.title isEqualToString:book.title]) {
+            NSLog(@"New found URL: %@", [each.pdfURL absoluteString]);
+            each.pdfURL = book.pdfURL;
+        }
+    }
+}
+
+
 #pragma mark - Persistence
 - (void) saveLastSelectedBookAtIndexPath: (NSIndexPath *) indexPath {
     // Get NSUserDefaults and save coords of the current selected book
@@ -200,6 +224,43 @@
     [defaults setObject:coords forKey:LAST_SELECTED_BOOK];
     
     [defaults synchronize];
+}
+
+#pragma mark - Sandbox
+- (void) saveModelInSandbox{
+    // Parse the array of dictionaries as JSON and save it in /Documents
+    //NSError *error = NO;
+    // Array of dictionaries with updated image path
+    NSArray *newJSONModel = [self.model proxyForJSON];
+    NSError *error = nil;
+    NSData *newJSONData = [NSJSONSerialization dataWithJSONObject:newJSONModel
+                                                          options:NSJSONWritingPrettyPrinted
+                                                            error:&error];
+
+    if (newJSONData == nil) {
+        NSLog(@"Error %@ when parsing new UPDATED model to JSON", error.localizedDescription);
+    }
+    else{
+        // Save data to sandbox
+        [self saveModelToSandbox:newJSONData];
+    }
+}
+
+- (void) saveModelToSandbox: (NSData *) modelData{
+    NSURL *url = [DTCSandboxURL URLToDocumentsFolderForFilename:SANDBOX_MODEL_FILENAME];
+    NSError *error;
+    BOOL ec = NO;
+    ec = [modelData writeToURL:url
+                       options:kNilOptions
+                         error:&error];
+    if (!ec) {
+        // Error when saving
+        NSLog(@"Error when saving model to Sandbox: %@",error.localizedDescription);
+    }
+    else{
+        // Saved successfully
+        NSLog(@"UPDATED JSON model saved successfully to sandbox");
+    }
 }
 
 @end

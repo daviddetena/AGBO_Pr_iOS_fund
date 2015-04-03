@@ -40,7 +40,7 @@
 - (id) initWithDictionary: (NSDictionary *) aDictionary;
 
 #pragma mark - Utils
-// Used to include every tag/author into a string that will be displayed
+// Used to include every tag/author in a string that will be displayed
 // in the Authors UILabel
 - (NSString *) stringOfItemsFromArray: (NSArray *) anArray;
 

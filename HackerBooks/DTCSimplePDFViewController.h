@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+#define NOTIF_NAME_URL_PDF_CHANGE @"bookPdfURLChange"
+#define NOTIF_KEY_URL_PDF_CHANGE @"pdfUrlChange"
+
+
 // Forward declaration
 @class DTCBook;
 

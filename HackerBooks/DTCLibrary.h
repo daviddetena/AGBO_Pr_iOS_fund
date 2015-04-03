@@ -16,6 +16,7 @@
 @interface DTCLibrary : NSObject
 
 #pragma mark - Properties
+@property (strong, nonatomic) NSArray *books;
 @property (nonatomic) NSUInteger booksCount;
 @property (strong, nonatomic) NSArray *tags;
 
@@ -34,6 +35,10 @@
 - (NSArray *) booksForTag: (NSString *) tag;
 // Book at a specified index with a specific tag
 - (DTCBook *) bookForTag: (NSString *) tag atIndex: (NSUInteger) index;
+
+#pragma mark - JSON
+// Turn an object of this class into a NSArray of NSDictionary to use it to create a JSON
+- (NSArray *) proxyForJSON;
 
 
 @end

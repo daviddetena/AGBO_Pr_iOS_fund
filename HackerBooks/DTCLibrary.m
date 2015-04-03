@@ -12,7 +12,7 @@
 @interface DTCLibrary ()
 
 // Array with all the books
-@property (strong,nonatomic) NSMutableArray *books;
+@property (strong,nonatomic) NSMutableArray *auxBooks;
 @property (strong,nonatomic) NSMutableArray *auxTags;
 
 @end
@@ -21,6 +21,17 @@
 @implementation DTCLibrary
 
 #pragma mark - Properties
+
+// Retrive the books sorted alphabetically
+- (NSArray *) books{
+    // Set a custom sort rule to sort books by title
+    NSSortDescriptor *firstDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+    NSArray *sortDescriptors = [NSArray arrayWithObjects:firstDescriptor, nil];
+    NSArray *sortedBooks = [self.auxBooks sortedArrayUsingDescriptors:sortDescriptors];
+    return sortedBooks;
+
+}
+
 // Total number of books
 - (NSUInteger) booksCount{
     return [self.books count];
@@ -38,65 +49,19 @@
 - (id) initWithArray:(NSArray *)arrayOfModels{
     if (self = [super init]) {
         // Init books and tags arrays
-        self.books = [NSMutableArray arrayWithCapacity:[arrayOfModels count]];
+        self.auxBooks = [NSMutableArray arrayWithCapacity:[arrayOfModels count]];
         self.auxTags = [[NSMutableArray alloc]init];
         
         for (NSDictionary *dict in arrayOfModels) {
             // Create books from dictionary. Add the books and new tags from them to the library
             DTCBook *book = [[DTCBook alloc] initWithDictionary:dict];
-            [self.books addObject:book];
+            [self.auxBooks addObject:book];
             [self addTagsFromArray:book.tags];
         }
+        //_books = [NSArray arrayWithArray:self.auxBooks];
     }
     return self;
 }
-/*
-- (id) init{
-    if(self = [super init]){
-        // Initialize model
-        
-        // Get data from a remote resource via JSON
-        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://keepcodigtest.blob.core.windows.net/containerblobstest/books_readable.json"]];
-        
-        // Get response from server dealing with errors
-        NSURLResponse *response = [[NSURLResponse alloc]init];
-        NSError *error;
-        NSData *data = [NSURLConnection sendSynchronousRequest:request
-                                             returningResponse:&response
-                                                         error:&error];
-        if (data!=nil) {
-            // There is data
-            id JSONObjects = [NSJSONSerialization JSONObjectWithData:data
-                                                             options:kNilOptions
-                                                               error:&error];
-            if (JSONObjects!=nil) {
-                // Data parsed successfully => Create an Array of NSDictionary
-                if ([JSONObjects isKindOfClass:[NSArray class]]) {
-                    self.books = [NSMutableArray arrayWithCapacity:[JSONObjects count]];
-                    self.auxTags = [[NSMutableArray alloc]init];
-                    
-                    // Check out if data was parsed as NSArray of NSDictionary
-                    for (NSDictionary *dict in JSONObjects) {
-                        // Create books from dictionary. Add the books and new tags from them to the library
-                        DTCBook *book = [[DTCBook alloc] initWithDictionary:dict];
-                        [self.books addObject:book];
-                        [self addTagsFromArray:book.tags];
-                    }
-                }
-            }
-            else{
-                NSLog(@"Error while parsin JSON: %@",error.localizedDescription);
-            }
-        }
-        else{
-            // No data or error
-            NSLog(@"Error while downloading JSON from server: %@",error.localizedDescription);
-        }
-    }
-    return self;
-}
- */
-
 #pragma mark - Instance methods
 
 // Number of books with a specific tag
@@ -146,5 +111,18 @@
         }
     }
 }
+
+#pragma mark - JSON
+// Turn an object of this class into a NSArray of NSDictionary to use it to create a JSON
+- (NSArray *) proxyForJSON{
+    NSMutableArray *arrayOfBooks = [NSMutableArray arrayWithCapacity:self.booksCount];
+    for (DTCBook *book in self.books) {
+        NSDictionary *dict = [book proxyForJSON];
+        [arrayOfBooks addObject:dict];
+    }
+    return arrayOfBooks;
+}
+
+
 
 @end

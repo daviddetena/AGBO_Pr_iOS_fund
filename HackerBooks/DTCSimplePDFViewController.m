@@ -48,11 +48,12 @@
     [super viewWillAppear:animated];
 
     // Suscribe for notifications
-    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-    [defaultCenter addObserver:self selector:@selector(notifyThatPdfUrlDidChange:) name:NOTIF_NAME_BOOK_SELECTED_PDF_URL object:nil];
+//    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+//    [defaultCenter addObserver:self selector:@selector(notifyThatPdfUrlDidChange:) name:NOTIF_NAME_BOOK_SELECTED_PDF_URL object:nil];
     
     // This class will be the delegate for the browser
     self.browser.delegate = self;
+    
     [self configureOriginOfPdfURL];
 }
 
@@ -60,8 +61,8 @@
     [super viewWillDisappear:animated];
     
     // Unsuscribe from notification center
-    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-    [defaultCenter removeObserver:self name:NOTIF_NAME_BOOK_SELECTED_PDF_URL object:nil];
+//    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+//    [defaultCenter removeObserver:self name:NOTIF_NAME_BOOK_SELECTED_PDF_URL object:nil];
 }
 
 
@@ -75,31 +76,36 @@
 #pragma mark - Utils
 
 - (void) configureOriginOfPdfURL{
-    BOOL canDisplayPDF = NO;
+    //BOOL canDisplayPDF = NO;
     
     if ([self isPdfURLRemote]) {
         [self activateViewIndicator];
-        canDisplayPDF = [self isPDFLoadedFromRemote];
+        [self loadPDFFromRemote];
+        //canDisplayPDF = [self isPDFLoadedFromRemote];
     }
     else{
         [self activateViewIndicator];
-        canDisplayPDF = [self isPDFLoadedFromSandbox];
+        [self loadPDFFromSandbox];
+        //canDisplayPDF = [self isPDFLoadedFromSandbox];
     }
-    
+    /*
     if (canDisplayPDF) {
         [self displayPDF];
     }
     else{
         NSLog(@"Couldn't load PDF from any url");
     }
+     */
 }
 
 // Check if the pdf url of the model is local or remote
 - (BOOL) isPdfURLRemote{
     if ([[self.model.pdfURL absoluteString] hasPrefix:@"http"] || [[self.model.pdfURL absoluteString] hasPrefix:@"https"]) {
+        NSLog(@"PDF remote");
         return YES;
     }
     else{
+        NSLog(@"PDF local");
         return NO;
     }
 }
@@ -115,7 +121,7 @@
 }
 
 - (void) displayPDF{
-    NSLog(@"URL pdf: %@", [self.model.pdfURL path]);
+    NSLog(@"Showing pdf with url: %@", [self.model.pdfURL path]);
     [self deactivateViewIndicator];
     [self.browser loadData:self.pdfData MIMEType:@"application/pdf" textEncodingName:@"utf-8" baseURL:nil];
 }
@@ -145,7 +151,8 @@
     }
 }
 
-- (BOOL) isPDFLoadedFromSandbox{
+- (void) loadPDFFromSandbox{
+    NSLog(@"Entro en loadPDFFromSandbox");
     NSError *error;
     NSURL *localURL = [DTCSandboxURL URLToDocumentsCustomFolder:@"PDFs" forFilename:[DTCSandboxURL filenameFromURL:self.model.pdfURL]];
     
@@ -153,31 +160,30 @@
     if (!self.pdfData) {
         // Error
         NSLog(@"Error while loading PDF from Sandbox: %@",error.localizedDescription);
-        return NO;
     }
     else{
         NSLog(@"Load pdf from Sandbox");
-        return YES;
+        [self displayPDF];
     }
 }
 
 
 #pragma mark - Network
-- (BOOL) isPDFLoadedFromRemote{
+- (void) loadPDFFromRemote{
     // Request the pdf url to server, with a timeout of 10 segs and ignoring cache
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:self.model.pdfURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:self.model.pdfURL cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10.0];
     
     // Create the connection and start loading data. The Controller is the connection delegate
     NSURLConnection *urlConnection = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     if (urlConnection) {
         // If connection, alloc receivedData
         _receivedData = [[NSMutableData alloc]init];
-        return YES;
+        //return YES;
     }
     else{
         // Errors when connecting
         NSLog(@"Error in viewDidLoad. Couldn't connect to server");
-        return NO;
+        //return NO;
     }
 }
 
@@ -219,32 +225,42 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
     [self.receivedData appendData:data];
 }
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    NSLog(@"Error in didFailWithError: %@", error.localizedDescription);
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
+    //NSLog(@"Error in didFailWithError: %@", error.localizedDescription);
+    [self deactivateViewIndicator];
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"ERROR" message:[NSString stringWithFormat:@"%@",error.localizedDescription] delegate:self cancelButtonTitle:nil otherButtonTitles:@"Ok", nil];
+    [alertView show];
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection{
+    
+    NSLog(@"URLConnection finished loading...");
+    
     // Once data is received, create pdf with it and ask the browser to display it
     self.pdfData = [NSData dataWithData:self.receivedData];
+    NSString *cleanPathname = [self trimSpacesFromString:[self.model.pdfURL absoluteString]];
+    NSString *newFilename = [DTCSandboxURL filenameFromURL:[NSURL URLWithString:cleanPathname]];
     
-    // Save data in Sandbox. Take only the filename w/o the path
-    NSString *filename = [DTCSandboxURL filenameFromURL:self.model.pdfURL];
-    [self savePDFInSandbox:self.pdfData withFilename:filename];
+    
+    [self savePDFInSandbox:self.pdfData withFilename:newFilename];
     
     // Update PDF url in model and JSON
-    self.model.pdfURL = [NSURL URLWithString:filename];
-    //[self updateModelInJSON];
+    self.model.pdfURL = [NSURL URLWithString:newFilename];
+
+    NSLog(@"Nofify the table that pdf url has changed. New: %@", [self.model.pdfURL absoluteString]);
+    
+    //NOTIFY THE LIBRARY THAT THE PDF URL OF MODEL HAS CHANGED
+    NSNotification *notification = [NSNotification notificationWithName:NOTIF_NAME_URL_PDF_CHANGE object:self userInfo:@{NOTIF_KEY_URL_PDF_CHANGE:self.model}];
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
     
     // Display PDF
     [self displayPDF];
-    
-    //NOTIFY THE LIBRARY THAT THE PDF URL OF MODEL HAS CHANGED
 }
 
 
 #pragma mark - Notifications
+/*
 - (void) notifyThatPdfUrlDidChange: (NSNotification *) n{
     
     // Get the model from Notification
@@ -253,5 +269,13 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
     self.model = book;
     [self configureOriginOfPdfURL];
 }
+*/
 
+
+
+#pragma mark - Utils
+- (NSString *) trimSpacesFromString: (NSString *) aString{
+    NSString *auxString = [aString stringByReplacingOccurrencesOfString:@" " withString:@"_"];
+    return auxString;
+}
 @end

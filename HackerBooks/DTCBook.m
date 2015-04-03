@@ -25,7 +25,16 @@
     
     // Lazy load: image loaded only if needed
     if(_photo==nil){
-        _photo = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.photoURL]];
+        NSURL *url = nil;
+        if (![[self.photoURL absoluteString] hasPrefix:@"http://"] || ! [[self.photoURL absoluteString] hasPrefix:@"https://"]) {
+            // Load from local
+            url = [DTCSandboxURL URLToDocumentsCustomFolder:@"Images" forFilename:[self.photoURL absoluteString]];
+        }
+        else{
+            // Load from remote
+            url = [NSURL URLWithString:[self.photoURL absoluteString]];
+        }
+        _photo = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
     }
     return _photo;
 }
@@ -69,8 +78,16 @@
     return [self initWithTitle:[aDictionary objectForKey:@"title"]
                        authors:[aDictionary objectForKey:@"authors"]
                           tags:[aDictionary objectForKey:@"tags"]
+                      photoURL:[NSURL URLWithString:[aDictionary objectForKey:@"image_url"]]
+                        pdfURL:[NSURL URLWithString:[aDictionary objectForKey:@"pdf_url"]]];
+
+    /*
+    return [self initWithTitle:[aDictionary objectForKey:@"title"]
+                       authors:[aDictionary objectForKey:@"authors"]
+                          tags:[aDictionary objectForKey:@"tags"]
                       photoURL:[DTCSandboxURL URLToDocumentsCustomFolder:@"Images" forFilename:[aDictionary objectForKey:@"image_url"]]
                         pdfURL:[NSURL URLWithString:[aDictionary objectForKey:@"pdf_url"]]];
+     */
 }
 
 #pragma mark - Utils

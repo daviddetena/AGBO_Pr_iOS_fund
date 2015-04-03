@@ -33,10 +33,12 @@
     NSNotificationCenter *defCenter = [NSNotificationCenter defaultCenter];
     [defCenter addObserver:self selector:@selector(notifyThatBookDidToggleFavorite:) name:NOTIF_NAME_BOOK_TOGGLE_FAVORITE object:nil];
     
+    // Suscribe to SimplePDF notifications
+    [defCenter addObserver:self selector:@selector(notifyThatBookPdfURLDidChange:) name:NOTIF_NAME_URL_PDF_CHANGE object:nil];
     
     
     [self syncModelWithView];
-    
+    NSLog(@"PDF path in Book: %@", [self.model.pdfURL absoluteString]);
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -56,7 +58,7 @@
 #pragma mark - Actions
 - (IBAction)toggleFavorite:(id)sender{
     self.model.favorite = !self.model.favorite;
-    NSLog(@"Favorite = %d", self.model.favorite);
+    //NSLog(@"Favorite = %d", self.model.favorite);
     
     [self postNotificationBookDidToggleFavorite];
     [self updateFavoriteStatus];
@@ -74,11 +76,9 @@
     self.authorsLabel.text = [self.model stringOfItemsFromArray:self.model.authors];
     self.tagsLabel.text = [self.model stringOfItemsFromArray:self.model.tags];
     
-    /*
     self.titleLabel.numberOfLines = 0;
     self.authorsLabel.numberOfLines = 0;
     self.tagsLabel.numberOfLines = 0;
-     */
     
     self.photoImageView.image = self.model.photo;
     [self updateFavoriteStatus];
@@ -121,6 +121,8 @@
     [self syncModelWithView];
 }
 
+
+
 #pragma mark - Notifications
 - (void) postNotificationBookDidToggleFavorite{
     // Create a notification to let the others VC know that there was a change in the model
@@ -129,8 +131,21 @@
     [[NSNotificationCenter defaultCenter] postNotification:not];
 }
 
+// Notification received from DTCBookVC
 - (void) notifyThatBookDidToggleFavorite: (NSNotification *) notification{
     [self updateFavoriteStatus];
+}
+
+
+// Notification received from SimplePDFVC
+- (void) notifyThatBookPdfURLDidChange: (NSNotification *) notification{
+    // Get the book
+    NSDictionary *dict = [notification userInfo];
+    DTCBook *book = [dict objectForKey:NOTIF_KEY_URL_PDF_CHANGE];
+    self.model = book;
+    
+    NSLog(@"notifyThatBookPdfURLDidChange in DTCBookVC. New pdf url: %@", [self.model.pdfURL path]);
+    //[self syncModelWithView];
 }
 
 @end

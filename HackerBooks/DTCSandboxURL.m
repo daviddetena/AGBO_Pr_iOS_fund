@@ -82,7 +82,7 @@
         return [urlParts lastObject];
     }
     else{
-        return [aURL path];
+        return [aURL absoluteString];
     }
 }
 

@@ -12,11 +12,6 @@
 #define NOTIF_NAME_BOOK_TOGGLE_FAVORITE @"bookToggleFavorite"
 #define NOTIF_KEY_BOOK_FAVORITE @"bookFavorite"
 
-#define NOTIF_NAME_URL_PDF_CHANGE @"bookPdfURLChange"
-#define NOTIF_KEY_URL_PDF_CHANGE @"pdfUrlChange"
-
-
-
 // Forward declaration
 @class DTCBook;
 
@@ -29,6 +24,7 @@
 @property (weak,nonatomic) IBOutlet UIImageView *photoImageView;
 @property (weak,nonatomic) IBOutlet UIBarButtonItem *favoriteButton;
 @property (strong,nonatomic) DTCBook *model;
+
 
 #pragma mark - Instance init
 - (id) initWithModel: (DTCBook *) aModel;

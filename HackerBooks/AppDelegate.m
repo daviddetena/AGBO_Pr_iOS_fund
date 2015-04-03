@@ -185,15 +185,18 @@
                         NSURL *imageRemoteURL = [NSURL URLWithString:[dict objectForKey:@"image_url"]];
                         NSString *imageFilename = [DTCSandboxURL filenameFromURL:imageRemoteURL];
                                                  
-                                                 
  //                       NSURL *localImage = [self localImageURLFromRemoteURL:imageRemoteURL];
                         [self saveImageInSandbox:imageData withFilename:imageFilename];
                         
                         // Update image_url path to local. Create a new dictionary for every book with its updated image_url and add to the new array of dictionaries
                         DTCBook *book = [[DTCBook alloc]initWithDictionary:dict];
+                        DTCBook *newBook = [[DTCBook alloc] initWithTitle:book.title
+                                                                  authors:[book stringOfItemsFromArray:book.authors]
+                                                                     tags:[book stringOfItemsFromArray:book.tags]
+                                                                 photoURL:[NSURL URLWithString:imageFilename]
+                                                                   pdfURL:book.pdfURL];
                         
-                        book.photoURL = [NSURL URLWithString:imageFilename];
-                        NSDictionary *bookDictionary = [book proxyForJSON];
+                        NSDictionary *bookDictionary = [newBook proxyForJSON];
                         [newJSONModel addObject:bookDictionary];
                         
                         // Parse the array of dictionaries as JSON and save it in /Documents
