@@ -33,27 +33,15 @@
 }
 
 #pragma mark - View Lifecycle
-/*
-- (void)viewDidLoad{
-    NSLog(@"URL pdf en viewDidLoad: %@", [self.model.pdfURL absoluteString]);
-    
-    // Check if pdf url is local or remote
-    if ([self isPdfURLRemote]) {
-        // Load pdf from remote
-        [self loadPDFFromRemote];
-    }
-}
-*/
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
 
     // Suscribe for notifications
-//    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-//    [defaultCenter addObserver:self selector:@selector(notifyThatPdfUrlDidChange:) name:NOTIF_NAME_BOOK_SELECTED_PDF_URL object:nil];
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter addObserver:self selector:@selector(notifyThatPdfUrlDidChange:) name:NOTIF_NAME_BOOK_SELECTED_PDF_URL object:nil];
     
     // This class will be the delegate for the browser
     self.browser.delegate = self;
-    
     [self configureOriginOfPdfURL];
 }
 
@@ -61,8 +49,8 @@
     [super viewWillDisappear:animated];
     
     // Unsuscribe from notification center
-//    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-//    [defaultCenter removeObserver:self name:NOTIF_NAME_BOOK_SELECTED_PDF_URL object:nil];
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter removeObserver:self];
 }
 
 
@@ -76,26 +64,16 @@
 #pragma mark - Utils
 
 - (void) configureOriginOfPdfURL{
-    //BOOL canDisplayPDF = NO;
+    NSLog(@"En configureOriginOfPdfURL la url del pdf es: %@",[self.model.pdfURL absoluteString]);
     
     if ([self isPdfURLRemote]) {
         [self activateViewIndicator];
         [self loadPDFFromRemote];
-        //canDisplayPDF = [self isPDFLoadedFromRemote];
     }
     else{
         [self activateViewIndicator];
         [self loadPDFFromSandbox];
-        //canDisplayPDF = [self isPDFLoadedFromSandbox];
     }
-    /*
-    if (canDisplayPDF) {
-        [self displayPDF];
-    }
-    else{
-        NSLog(@"Couldn't load PDF from any url");
-    }
-     */
 }
 
 // Check if the pdf url of the model is local or remote
@@ -121,7 +99,7 @@
 }
 
 - (void) displayPDF{
-    NSLog(@"Showing pdf with url: %@", [self.model.pdfURL path]);
+    NSLog(@"Showing pdf with url: %@", [self.model.pdfURL absoluteString]);
     [self deactivateViewIndicator];
     [self.browser loadData:self.pdfData MIMEType:@"application/pdf" textEncodingName:@"utf-8" baseURL:nil];
 }
@@ -142,12 +120,12 @@
     
     // Error when saving image
     if (ec==NO) {
-        NSLog(@"Error %@. Couldn't save pdf at %@", error.localizedDescription,[url path]);
+        NSLog(@"Error %@. Couldn't save pdf at %@", error.localizedDescription,[url absoluteString]);
     }
     else{
         // Initialize every book with its local image path
         
-        NSLog(@"PDF successfully downloaded to %@", [url path]);
+        NSLog(@"PDF successfully downloaded to %@", [url absoluteString]);
     }
 }
 
@@ -190,7 +168,7 @@
 
 #pragma mark - UIWebViewDelegate
 - (void) webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
-    self.activityView.hidden = YES;
+    [self deactivateViewIndicator];
     NSLog(@"Error when loading url: %@", error.localizedDescription);
 }
 
@@ -242,34 +220,33 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
     NSString *cleanPathname = [self trimSpacesFromString:[self.model.pdfURL absoluteString]];
     NSString *newFilename = [DTCSandboxURL filenameFromURL:[NSURL URLWithString:cleanPathname]];
     
-    
-    [self savePDFInSandbox:self.pdfData withFilename:newFilename];
-    
     // Update PDF url in model and JSON
     self.model.pdfURL = [NSURL URLWithString:newFilename];
 
-    NSLog(@"Nofify the table that pdf url has changed. New: %@", [self.model.pdfURL absoluteString]);
+    //NSLog(@"After downloading, notify that pdf url has changed. New: %@", [self.model.pdfURL absoluteString]);
+    
+    // Save pdf in Sandbox
+    [self savePDFInSandbox:self.pdfData withFilename:newFilename];
+    
+    // Display PDF
+    [self displayPDF];
     
     //NOTIFY THE LIBRARY THAT THE PDF URL OF MODEL HAS CHANGED
     NSNotification *notification = [NSNotification notificationWithName:NOTIF_NAME_URL_PDF_CHANGE object:self userInfo:@{NOTIF_KEY_URL_PDF_CHANGE:self.model}];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
-    
-    // Display PDF
-    [self displayPDF];
 }
 
 
 #pragma mark - Notifications
-/*
-- (void) notifyThatPdfUrlDidChange: (NSNotification *) n{
-    
+- (void) notifyThatPdfUrlDidChange: (NSNotification *) n{    
     // Get the model from Notification
     NSDictionary *dict = [n userInfo];
     DTCBook *book = [dict objectForKey:NOTIF_KEY_BOOK];
+    NSLog(@"notify the PDFViewer that the library selected a book with pdf: %@",[book.pdfURL absoluteString]);
     self.model = book;
+    
     [self configureOriginOfPdfURL];
 }
-*/
 
 
 

@@ -58,10 +58,11 @@
             [self.auxBooks addObject:book];
             [self addTagsFromArray:book.tags];
         }
-        //_books = [NSArray arrayWithArray:self.auxBooks];
     }
     return self;
 }
+
+
 #pragma mark - Instance methods
 
 // Number of books with a specific tag

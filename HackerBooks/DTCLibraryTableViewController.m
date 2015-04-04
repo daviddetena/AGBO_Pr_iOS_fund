@@ -13,6 +13,7 @@
 #import "Settings.h"
 #import "DTCSimplePDFViewController.h"
 #import "DTCSandboxURL.h"
+#import "DTCBookTableViewCell.h"
 
 @import UIKit;
 
@@ -23,7 +24,13 @@
 - (id) initWithModel:(DTCLibrary *)model style:(UITableViewStyle)aStyle{
     if(self = [super initWithStyle:aStyle]){
         _model = model;
-        _favoriteBooks = [NSMutableArray arrayWithCapacity:0];
+        [self initFavorites];
+        //_favoriteBooks = [NSMutableArray arrayWithCapacity:0];
+        
+        // Register our custom cell as the cell to use in the table view
+        UINib *nib = [UINib nibWithNibName:@"DTCBookTableViewCell" bundle:[NSBundle mainBundle]];
+        [self.tableView registerNib:nib forCellReuseIdentifier:[DTCBookTableViewCell cellId]];
+        
         self.title = @"Nerds library";
     }
     return self;
@@ -37,10 +44,7 @@
     // Suscribe to notification the book sends when toggling its favorite status and that the pdf url of model has changed
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter addObserver:self selector:@selector(notifyThatBookDidToggleFavorite:) name:NOTIF_NAME_BOOK_TOGGLE_FAVORITE object:nil];
-    [defaultCenter addObserver:self selector:@selector(notifyThatBookPdfURLDidChange:) name:NOTIF_KEY_URL_PDF_CHANGE object:nil];
-    
-    // Save in Sandbox the JSON version of updated model
-    [self saveModelInSandbox];
+    [defaultCenter addObserver:self selector:@selector(notifyThatPdfURLDidChange:) name:NOTIF_NAME_URL_PDF_CHANGE object:nil];
 }
 
 
@@ -57,6 +61,11 @@
 
 
 #pragma mark - Table view data source
+// Estimated 
+-(CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 80;
+}
+
 // The table will have as much sections as tags in the library and one more for favorites
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return ([self.model.tags count] + 1);
@@ -113,20 +122,22 @@
 
     // Book model
     DTCBook *book = [self bookAtIndexPath:indexPath];
-    
-    // Create the cell, initialized once and reused every time this method is called
-    static NSString *cellId = @"BookCell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
-    if (cell==nil) {
-        // Create a new cell by hand
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellId];
-    }
+
+    // Always receive a custom cell
+    DTCBookTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[DTCBookTableViewCell cellId] forIndexPath:indexPath];
     
     // Configure cell
-    cell.imageView.image = book.photo;
-    cell.textLabel.text = book.title;
-    cell.detailTextLabel.text = [book stringOfItemsFromArray:book.authors];
+    cell.bookIcon.image = book.photo;
+    cell.title.text = book.title;
+    cell.authors.text = [book stringOfItemsFromArray:book.authors];
+    
+    if ([[book.pdfURL absoluteString] hasPrefix:@"http://"] || [[book.pdfURL absoluteString] hasPrefix:@"https://"]) {
+        // Need to download pdf
+        cell.downloadIcon.image = [UIImage imageNamed:@"download-icon.png"];
+    }
+    else{
+        cell.downloadIcon.image = [UIImage imageNamed:@"downloaded-icon.png"];
+    }
     
     // Return cell with the book
     return cell;
@@ -144,19 +155,29 @@
         [self.delegate libraryTableViewController:self didSelectBook:book];
     }
     
-    // Notify the PDFViewer through notifications that the model has changed. Send the new selected book
+    // Notify the PDFViewer that the model has changed. Send the new selected book
     NSNotification *notification = [NSNotification notificationWithName:NOTIF_NAME_BOOK_SELECTED_PDF_URL object:self userInfo:@{NOTIF_KEY_BOOK:book}];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
     
     // Save current book in NSUserDefaults
     [self saveLastSelectedBookAtIndexPath:indexPath];
-    
-    NSLog(@"PDF path in library: %@",[book.pdfURL absoluteString]);
-    NSLog(@"IMAGE path in library: %@",[book.photoURL absoluteString]);
 }
 
 
 #pragma mark - Utils
+// Create and add the favorites from Sandbox
+- (void) initFavorites{
+    _favoriteBooks = [[NSMutableArray alloc]init];
+    
+    for (DTCBook *book in self.model.books) {
+        NSLog(@"Valor esFavorito: %d",book.isFavorite);
+        if (book.isFavorite) {
+            [_favoriteBooks addObject:book];
+        }
+    }
+}
+
+
 // Returns the book at a specified index path
 - (DTCBook *) bookAtIndexPath: (NSIndexPath *)indexPath{
     DTCBook *book = nil;
@@ -184,7 +205,7 @@
     DTCBook *book = [dict objectForKey:NOTIF_KEY_BOOK_FAVORITE];
     
     // Check favorite status and add/remove it from favorites
-    if (book.favorite) {
+    if (book.isFavorite) {
         if (![self.favoriteBooks containsObject:book]) {
             [self.favoriteBooks addObject:book];
         }
@@ -195,13 +216,23 @@
         }
     }
     
+    // Search the book and update its isFavorite property
+    for (DTCBook *each in self.model.books) {
+        if ([each.title isEqualToString:book.title]) {
+            each.isFavorite = book.isFavorite;
+            NSLog(@"Status of book: %d",each.isFavorite);
+        }
+    }
+    
     // Reload table data
     [self.tableView reloadData];
+    // Save updated data
+    [self saveModelInSandbox];
 }
 
 
 // Notification received from SimplePDFVC
-- (void) notifyThatBookPdfURLDidChange: (NSNotification *) notification{
+- (void) notifyThatPdfURLDidChange: (NSNotification *) notification{
     // Get the book
     NSDictionary *dict = [notification userInfo];
     DTCBook *book = [dict objectForKey:NOTIF_KEY_URL_PDF_CHANGE];
@@ -209,10 +240,13 @@
     // Update the book in the array
     for (DTCBook *each in self.model.books) {
         if ([each.title isEqualToString:book.title]) {
-            NSLog(@"New found URL: %@", [each.pdfURL absoluteString]);
             each.pdfURL = book.pdfURL;
         }
     }
+    
+    // Reload table data and save updated model in sandbox
+    [self.tableView reloadData];
+    [self saveModelInSandbox];
 }
 
 
@@ -228,9 +262,7 @@
 
 #pragma mark - Sandbox
 - (void) saveModelInSandbox{
-    // Parse the array of dictionaries as JSON and save it in /Documents
-    //NSError *error = NO;
-    // Array of dictionaries with updated image path
+    // Parse the array of dictionaries with the updated model as JSON and save it in /Documents
     NSArray *newJSONModel = [self.model proxyForJSON];
     NSError *error = nil;
     NSData *newJSONData = [NSJSONSerialization dataWithJSONObject:newJSONModel

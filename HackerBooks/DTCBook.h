@@ -19,19 +19,21 @@
 @property (strong,nonatomic) NSURL *photoURL;
 @property (strong,nonatomic) NSURL *pdfURL;
 @property (strong,nonatomic, readonly) UIImage *photo;
-@property (nonatomic) BOOL favorite;
+@property (nonatomic) BOOL isFavorite;
 
 #pragma mark - Class init
-+ (instancetype) bookWithTitle: (NSString *) aTitle
++ (instancetype) bookWithTitle:(NSString *) aTitle
                        authors:(NSString *) stringOfAuthors
+                    isFavorite:(BOOL) isFavorite
                           tags:(NSString *) stringOfTags
                       photoURL:(NSURL *) aPhotoURL
                         pdfURL:(NSURL *) aPdfURL;
 
 #pragma mark - Instance init
 // Designated
-- (id) initWithTitle: (NSString *) aTitle
+- (id) initWithTitle:(NSString *) aTitle
              authors:(NSString *) stringOfAuthors
+          isFavorite:(BOOL) isFavorite
                 tags:(NSString *) stringOfTags
             photoURL:(NSURL *) aPhotoURL
               pdfURL:(NSURL *) aPdfURL;

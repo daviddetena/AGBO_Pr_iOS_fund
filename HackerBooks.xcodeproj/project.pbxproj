@@ -26,6 +26,14 @@
 		59764C031ACC500700066F13 /* DTCSandboxURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 59764C021ACC500700066F13 /* DTCSandboxURL.m */; };
 		5976703A1AC938560018DD03 /* DTCLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 597670391AC938560018DD03 /* DTCLibrary.m */; };
 		5976703D1AC945010018DD03 /* DTCLibraryTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5976703C1AC945010018DD03 /* DTCLibraryTableViewController.m */; };
+		5991D2D51AD007BC004B0088 /* download-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5991D2CF1AD007BC004B0088 /* download-icon.png */; };
+		5991D2D61AD007BC004B0088 /* download-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5991D2D01AD007BC004B0088 /* download-icon@2x.png */; };
+		5991D2D71AD007BC004B0088 /* download-icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5991D2D11AD007BC004B0088 /* download-icon@3x.png */; };
+		5991D2DE1AD00B6F004B0088 /* DTCBookTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5991D2DC1AD00B6F004B0088 /* DTCBookTableViewCell.m */; };
+		5991D2DF1AD00B6F004B0088 /* DTCBookTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5991D2DD1AD00B6F004B0088 /* DTCBookTableViewCell.xib */; };
+		5991D2E31AD01028004B0088 /* downloaded-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5991D2E01AD01028004B0088 /* downloaded-icon.png */; };
+		5991D2E41AD01028004B0088 /* downloaded-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5991D2E11AD01028004B0088 /* downloaded-icon@2x.png */; };
+		5991D2E51AD01028004B0088 /* downloaded-icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5991D2E21AD01028004B0088 /* downloaded-icon@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +78,15 @@
 		5976703B1AC945010018DD03 /* DTCLibraryTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTCLibraryTableViewController.h; sourceTree = "<group>"; };
 		5976703C1AC945010018DD03 /* DTCLibraryTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTCLibraryTableViewController.m; sourceTree = "<group>"; };
 		597844E51ACAB62800384B49 /* Settings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		5991D2CF1AD007BC004B0088 /* download-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download-icon.png"; sourceTree = "<group>"; };
+		5991D2D01AD007BC004B0088 /* download-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download-icon@2x.png"; sourceTree = "<group>"; };
+		5991D2D11AD007BC004B0088 /* download-icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download-icon@3x.png"; sourceTree = "<group>"; };
+		5991D2DB1AD00B6F004B0088 /* DTCBookTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTCBookTableViewCell.h; sourceTree = "<group>"; };
+		5991D2DC1AD00B6F004B0088 /* DTCBookTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTCBookTableViewCell.m; sourceTree = "<group>"; };
+		5991D2DD1AD00B6F004B0088 /* DTCBookTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DTCBookTableViewCell.xib; sourceTree = "<group>"; };
+		5991D2E01AD01028004B0088 /* downloaded-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "downloaded-icon.png"; sourceTree = "<group>"; };
+		5991D2E11AD01028004B0088 /* downloaded-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "downloaded-icon@2x.png"; sourceTree = "<group>"; };
+		5991D2E21AD01028004B0088 /* downloaded-icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "downloaded-icon@3x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +130,7 @@
 			children = (
 				596A40391AC5C58A0040A8AE /* Resources */,
 				596A40261AC5B88E0040A8AE /* Models */,
+				5991D2CE1ACFF977004B0088 /* Views */,
 				596A402C1AC5BF170040A8AE /* Controllers */,
 				596A40071AC5B5490040A8AE /* AppDelegate.h */,
 				596A40081AC5B5490040A8AE /* AppDelegate.m */,
@@ -179,6 +197,12 @@
 		596A40391AC5C58A0040A8AE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5991D2CF1AD007BC004B0088 /* download-icon.png */,
+				5991D2D01AD007BC004B0088 /* download-icon@2x.png */,
+				5991D2D11AD007BC004B0088 /* download-icon@3x.png */,
+				5991D2E01AD01028004B0088 /* downloaded-icon.png */,
+				5991D2E11AD01028004B0088 /* downloaded-icon@2x.png */,
+				5991D2E21AD01028004B0088 /* downloaded-icon@3x.png */,
 				596A402D1AC5C5840040A8AE /* favorite-filled.png */,
 				596A402E1AC5C5840040A8AE /* favorite-filled@2x.png */,
 				596A402F1AC5C5840040A8AE /* favorite-filled@3x.png */,
@@ -197,6 +221,16 @@
 				59764C021ACC500700066F13 /* DTCSandboxURL.m */,
 			);
 			name = Helpers;
+			sourceTree = "<group>";
+		};
+		5991D2CE1ACFF977004B0088 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5991D2DB1AD00B6F004B0088 /* DTCBookTableViewCell.h */,
+				5991D2DC1AD00B6F004B0088 /* DTCBookTableViewCell.m */,
+				5991D2DD1AD00B6F004B0088 /* DTCBookTableViewCell.xib */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -280,6 +314,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5991D2D71AD007BC004B0088 /* download-icon@3x.png in Resources */,
 				596A40341AC5C5840040A8AE /* favorite-filled@2x.png in Resources */,
 				596A40371AC5C5840040A8AE /* favorite-outline@2x.png in Resources */,
 				596A400E1AC5B5490040A8AE /* LaunchScreen.xib in Resources */,
@@ -288,8 +323,14 @@
 				596A403E1AC5C8780040A8AE /* DTCSimplePDFViewController.xib in Resources */,
 				596A40361AC5C5840040A8AE /* favorite-outline.png in Resources */,
 				596A40351AC5C5840040A8AE /* favorite-filled@3x.png in Resources */,
+				5991D2E31AD01028004B0088 /* downloaded-icon.png in Resources */,
+				5991D2E41AD01028004B0088 /* downloaded-icon@2x.png in Resources */,
 				596A400B1AC5B5490040A8AE /* Images.xcassets in Resources */,
+				5991D2DF1AD00B6F004B0088 /* DTCBookTableViewCell.xib in Resources */,
+				5991D2D51AD007BC004B0088 /* download-icon.png in Resources */,
 				596A40331AC5C5840040A8AE /* favorite-filled.png in Resources */,
+				5991D2D61AD007BC004B0088 /* download-icon@2x.png in Resources */,
+				5991D2E51AD01028004B0088 /* downloaded-icon@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,6 +350,7 @@
 			files = (
 				596A40251AC5B87F0040A8AE /* DTCBook.m in Sources */,
 				5976703A1AC938560018DD03 /* DTCLibrary.m in Sources */,
+				5991D2DE1AD00B6F004B0088 /* DTCBookTableViewCell.m in Sources */,
 				5976703D1AC945010018DD03 /* DTCLibraryTableViewController.m in Sources */,
 				596A40091AC5B5490040A8AE /* AppDelegate.m in Sources */,
 				596A40061AC5B5490040A8AE /* main.m in Sources */,

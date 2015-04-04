@@ -43,12 +43,14 @@
 // Main class method
 + (instancetype) bookWithTitle:(NSString *)aTitle
                        authors:(NSString *)stringOfAuthors
+                    isFavorite:(BOOL) isFavorite
                           tags:(NSString *)stringOfTags
                       photoURL:(NSURL *)aPhotoURL
                         pdfURL:(NSURL *)aPdfURL{
     
     return [[self alloc] initWithTitle:aTitle
                                authors:stringOfAuthors
+                            isFavorite:isFavorite
                                   tags:stringOfTags
                               photoURL:aPhotoURL
                                 pdfURL:aPdfURL];
@@ -59,6 +61,7 @@
 // Main init
 - (id) initWithTitle:(NSString *) aTitle
              authors:(NSString *) stringOfAuthors
+          isFavorite:(BOOL) isFavorite
                 tags:(NSString *) stringOfTags
             photoURL:(NSURL *) aPhotoURL
               pdfURL:(NSURL *) aPdfURL{
@@ -67,6 +70,7 @@
         _title = aTitle;
         _authors = [self extractItemsFromString:stringOfAuthors];
         _tags = [self extractItemsFromString:stringOfTags];
+        _isFavorite = isFavorite;
         _photoURL = aPhotoURL;
         _pdfURL = aPdfURL;
     }
@@ -75,19 +79,15 @@
 
 // Init from a dictionary
 - (id) initWithDictionary: (NSDictionary *) aDictionary{
+    NSNumber *number = [aDictionary objectForKey:@"isFavorite"];
+    BOOL isFav = [number boolValue];
+    
     return [self initWithTitle:[aDictionary objectForKey:@"title"]
                        authors:[aDictionary objectForKey:@"authors"]
+                    isFavorite:isFav
                           tags:[aDictionary objectForKey:@"tags"]
                       photoURL:[NSURL URLWithString:[aDictionary objectForKey:@"image_url"]]
                         pdfURL:[NSURL URLWithString:[aDictionary objectForKey:@"pdf_url"]]];
-
-    /*
-    return [self initWithTitle:[aDictionary objectForKey:@"title"]
-                       authors:[aDictionary objectForKey:@"authors"]
-                          tags:[aDictionary objectForKey:@"tags"]
-                      photoURL:[DTCSandboxURL URLToDocumentsCustomFolder:@"Images" forFilename:[aDictionary objectForKey:@"image_url"]]
-                        pdfURL:[NSURL URLWithString:[aDictionary objectForKey:@"pdf_url"]]];
-     */
 }
 
 #pragma mark - Utils
@@ -117,10 +117,24 @@
     return clearPath;
 }
 
+- (NSNumber *) numberFromFavorite{
+    NSNumber *number = nil;
+    if (self.isFavorite) {
+        number = [NSNumber numberWithInt:1];
+    }
+    else{
+        number = [NSNumber numberWithInt:0];
+    }
+    return number;
+}
+
+
 #pragma mark - JSON
 // Turn an object of this class into a NSDictionary to use it to create a JSON
 - (NSDictionary *) proxyForJSON{
+    
     return @{@"title"       : self.title,
+             @"isFavorite"  : [self numberFromFavorite],
              @"authors"     : [self stringOfItemsFromArray:self.authors],
              @"tags"        : [self stringOfItemsFromArray:self.tags],
              @"image_url"   : [self urlPathWithBackslashesDeletedFromPath:self.photoURL],

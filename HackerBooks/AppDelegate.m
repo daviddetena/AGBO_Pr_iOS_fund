@@ -37,10 +37,13 @@
         
         // Save manually
         [defaults synchronize];
+        
+        NSLog(@"First launch: load from JSON");
     }
     else{
         // Load data from Sandbox
         libraryArray = [self loadModelFromSandbox];
+        NSLog(@"Not first launch: load from JSON");
     }
     
     // Load the model of library (either from JSON or from Sandbox)
@@ -130,6 +133,9 @@
     if (section>0) {
         book = [library bookForTag:[library.tags objectAtIndex:section-1] atIndex:pos];
     }
+    else{
+        // VER CUAL DE LOS FAVORITOS ES EL QUE SE MOSTRABA
+    }
     return book;
 }
 
@@ -171,11 +177,6 @@
                     NSData *imageData = [NSURLConnection sendSynchronousRequest:imageURLRequest
                                                               returningResponse:&imageURLResponse
                                                                           error:&error];
-//                    
-//                    NSURL *imageURL = [NSURL URLWithString:[dict objectForKey:@"image_url"]];
-//                    NSData *imageData = [NSData dataWithContentsOfURL:imageURL
-//                                                              options:kNilOptions
-//                                                                error:&error];
                     
                     if (!imageData) {
                         NSLog(@"Error %@ when fetching image '%@'", error.localizedDescription,[dict objectForKey:@"image_url"]);
@@ -192,6 +193,7 @@
                         DTCBook *book = [[DTCBook alloc]initWithDictionary:dict];
                         DTCBook *newBook = [[DTCBook alloc] initWithTitle:book.title
                                                                   authors:[book stringOfItemsFromArray:book.authors]
+                                                               isFavorite: NO
                                                                      tags:[book stringOfItemsFromArray:book.tags]
                                                                  photoURL:[NSURL URLWithString:imageFilename]
                                                                    pdfURL:book.pdfURL];
@@ -226,9 +228,8 @@
 
 
 - (void) saveImageInSandbox: (NSData *) imageData withFilename: (NSString *) filename{
+
     // Save image in /Documents
-//    NSURL *url = [self defaultSandboxURLForType:@"docs"];
-//    url = [url URLByAppendingPathComponent:filename];
     NSURL *url = [DTCSandboxURL URLToDocumentsCustomFolder:@"Images" forFilename:filename];
     NSError *error;
     BOOL ec = NO;
@@ -297,8 +298,6 @@
 }
 
 - (NSArray *) loadModelFromSandbox{
-//    NSURL *url = [self defaultSandboxURLForType:@"docs"];
-//    url = [url URLByAppendingPathComponent:@"library.txt"];
     
     NSURL *url = [DTCSandboxURL URLToDocumentsFolderForFilename:SANDBOX_MODEL_FILENAME];
     NSError *error;

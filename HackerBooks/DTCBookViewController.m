@@ -57,7 +57,7 @@
 
 #pragma mark - Actions
 - (IBAction)toggleFavorite:(id)sender{
-    self.model.favorite = !self.model.favorite;
+    self.model.isFavorite = !self.model.isFavorite;
     //NSLog(@"Favorite = %d", self.model.favorite);
     
     [self postNotificationBookDidToggleFavorite];
@@ -87,7 +87,7 @@
 // Set favourite button background image regarding its state
 - (void) updateFavoriteStatus{
     UIImage *image = nil;
-    if (self.model.favorite) {
+    if (self.model.isFavorite) {
         image = [UIImage imageNamed:@"favorite-filled"];
     }
     else{
