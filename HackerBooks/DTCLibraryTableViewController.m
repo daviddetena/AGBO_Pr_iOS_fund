@@ -25,8 +25,7 @@
     if(self = [super initWithStyle:aStyle]){
         _model = model;
         [self initFavorites];
-        //_favoriteBooks = [NSMutableArray arrayWithCapacity:0];
-        
+
         // Register our custom cell as the cell to use in the table view
         UINib *nib = [UINib nibWithNibName:@"DTCBookTableViewCell" bundle:[NSBundle mainBundle]];
         [self.tableView registerNib:nib forCellReuseIdentifier:[DTCBookTableViewCell cellId]];
@@ -61,7 +60,7 @@
 
 
 #pragma mark - Table view data source
-// Estimated 
+// Height for rows
 -(CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 80;
 }
@@ -70,6 +69,7 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return ([self.model.tags count] + 1);
 }
+
 
 // Number of rows in section will be bookCountForTag: method in the library model
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -82,16 +82,31 @@
     }
 }
 
+/*
+// View for the title of sections
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    UILabel *label = [[UILabel alloc]init];
+    label.font = [UIFont boldSystemFontOfSize:14];
+    label.text = [self tableView:tableView titleForHeaderInSection:section];
+    label.tintColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1];
+    
+    UIView *header = [[UIView alloc]init];
+    [header addSubview:label];
+    return header;
+}
+*/
 // The title of every row will be the proper tag
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
     if(section == 0){
         return @"Favorites";
     }
     else{
-        return [self.model.tags objectAtIndex:section -1];
+        NSString *tagCapitalize = [[self.model.tags objectAtIndex:section -1] capitalizedString];
+        return tagCapitalize;
     }
 }
 
+/*
 // The footer will be the number of books for every tag
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section{
     if (section == 0) {
@@ -116,7 +131,7 @@
         }
     }
 }
-
+*/
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 

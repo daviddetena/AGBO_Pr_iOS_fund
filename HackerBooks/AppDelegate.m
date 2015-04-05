@@ -22,6 +22,10 @@
 
 #pragma mark - App Lifecycle
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    // Custom UI
+    [self customizeAppearance];
+    
     self.window = [[UIWindow alloc]
                    initWithFrame:[[UIScreen mainScreen] bounds]];
     
@@ -88,6 +92,35 @@
 
 
 #pragma mark - Settings
+
+-(void)customizeAppearance{
+    
+    // Custom colors
+    UIColor *darkOrangeColor = [UIColor colorWithRed:233.0/255.0 green:154.0/255.0 blue:50.0/255.0 alpha:1];
+    UIColor *lightOrangeColor = [UIColor colorWithRed:255.0/255.0 green:210.0/255.0 blue:150.0/255.0 alpha:1];
+    UIColor *whiteColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1];
+    UIColor *lightGrayColor = [UIColor colorWithRed:240.0/255.0 green:240.0/255.0 blue:240.0/255.0 alpha:1];
+    UIColor *darkGrayColor = [UIColor colorWithRed:40.0/255.0 green:40.0/255.0 blue:40.0/255.0 alpha:1];
+
+    // Shadow for the Navigation title
+    NSShadow *titleShadow = [[NSShadow alloc]init];
+    titleShadow.shadowColor = darkGrayColor;
+    titleShadow.shadowOffset = CGSizeMake(1, 1);
+    
+    // Background and font for headers and footers of tables
+    [[UITableViewHeaderFooterView appearance] setTintColor:lightOrangeColor];
+    [[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setFont:[UIFont fontWithName:@"Avenir" size:16]];
+    
+    // Appearance for Navigation Bar
+    [[UINavigationBar appearance] setBarTintColor:darkOrangeColor];
+    [[UINavigationBar appearance] setTranslucent:NO];
+    [[UINavigationBar appearance] setTintColor:lightGrayColor];
+    NSDictionary *barTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                       [UIFont fontWithName:@"Starjedi" size:20], NSFontAttributeName ,whiteColor, NSForegroundColorAttributeName, titleShadow, NSShadowAttributeName,nil];
+    [[UINavigationBar appearance] setTitleTextAttributes:barTextAttributes];
+    
+}
+
 - (void)configureForPadWithModel:(DTCLibrary *)model{
     // Create the VCs. Select the book saved in NSUserDefaults as the first to be displayed
     DTCLibraryTableViewController *libraryVC = [[DTCLibraryTableViewController alloc]initWithModel:model style:UITableViewStylePlain];

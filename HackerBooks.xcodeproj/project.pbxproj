@@ -34,6 +34,7 @@
 		5991D2E31AD01028004B0088 /* downloaded-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5991D2E01AD01028004B0088 /* downloaded-icon.png */; };
 		5991D2E41AD01028004B0088 /* downloaded-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5991D2E11AD01028004B0088 /* downloaded-icon@2x.png */; };
 		5991D2E51AD01028004B0088 /* downloaded-icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5991D2E21AD01028004B0088 /* downloaded-icon@3x.png */; };
+		59A4CC4D1AD1340B007B94CF /* Starjedi.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 59A4CC4C1AD133F6007B94CF /* Starjedi.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +88,7 @@
 		5991D2E01AD01028004B0088 /* downloaded-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "downloaded-icon.png"; sourceTree = "<group>"; };
 		5991D2E11AD01028004B0088 /* downloaded-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "downloaded-icon@2x.png"; sourceTree = "<group>"; };
 		5991D2E21AD01028004B0088 /* downloaded-icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "downloaded-icon@3x.png"; sourceTree = "<group>"; };
+		59A4CC4C1AD133F6007B94CF /* Starjedi.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Starjedi.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +199,7 @@
 		596A40391AC5C58A0040A8AE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				59A4CC4C1AD133F6007B94CF /* Starjedi.ttf */,
 				5991D2CF1AD007BC004B0088 /* download-icon.png */,
 				5991D2D01AD007BC004B0088 /* download-icon@2x.png */,
 				5991D2D11AD007BC004B0088 /* download-icon@3x.png */,
@@ -314,6 +317,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59A4CC4D1AD1340B007B94CF /* Starjedi.ttf in Resources */,
 				5991D2D71AD007BC004B0088 /* download-icon@3x.png in Resources */,
 				596A40341AC5C5840040A8AE /* favorite-filled@2x.png in Resources */,
 				596A40371AC5C5840040A8AE /* favorite-outline@2x.png in Resources */,
