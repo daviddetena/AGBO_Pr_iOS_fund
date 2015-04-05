@@ -35,6 +35,13 @@
 		5991D2E41AD01028004B0088 /* downloaded-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5991D2E11AD01028004B0088 /* downloaded-icon@2x.png */; };
 		5991D2E51AD01028004B0088 /* downloaded-icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5991D2E21AD01028004B0088 /* downloaded-icon@3x.png */; };
 		59A4CC4D1AD1340B007B94CF /* Starjedi.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 59A4CC4C1AD133F6007B94CF /* Starjedi.ttf */; };
+		59A4CC511AD14A48007B94CF /* pen-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 59A4CC4E1AD14A48007B94CF /* pen-icon.png */; };
+		59A4CC521AD14A48007B94CF /* pen-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59A4CC4F1AD14A48007B94CF /* pen-icon@2x.png */; };
+		59A4CC531AD14A48007B94CF /* pen-icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59A4CC501AD14A48007B94CF /* pen-icon@3x.png */; };
+		59A4CC571AD14B6D007B94CF /* tag-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 59A4CC541AD14B6D007B94CF /* tag-icon.png */; };
+		59A4CC581AD14B6D007B94CF /* tag-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59A4CC551AD14B6D007B94CF /* tag-icon@2x.png */; };
+		59A4CC591AD14B6D007B94CF /* tag-icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59A4CC561AD14B6D007B94CF /* tag-icon@3x.png */; };
+		59A4CC5F1AD1A819007B94CF /* DTCBookViewController~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 59A4CC5E1AD1A819007B94CF /* DTCBookViewController~iphone.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +96,13 @@
 		5991D2E11AD01028004B0088 /* downloaded-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "downloaded-icon@2x.png"; sourceTree = "<group>"; };
 		5991D2E21AD01028004B0088 /* downloaded-icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "downloaded-icon@3x.png"; sourceTree = "<group>"; };
 		59A4CC4C1AD133F6007B94CF /* Starjedi.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Starjedi.ttf; sourceTree = "<group>"; };
+		59A4CC4E1AD14A48007B94CF /* pen-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pen-icon.png"; sourceTree = "<group>"; };
+		59A4CC4F1AD14A48007B94CF /* pen-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pen-icon@2x.png"; sourceTree = "<group>"; };
+		59A4CC501AD14A48007B94CF /* pen-icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pen-icon@3x.png"; sourceTree = "<group>"; };
+		59A4CC541AD14B6D007B94CF /* tag-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tag-icon.png"; sourceTree = "<group>"; };
+		59A4CC551AD14B6D007B94CF /* tag-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tag-icon@2x.png"; sourceTree = "<group>"; };
+		59A4CC561AD14B6D007B94CF /* tag-icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tag-icon@3x.png"; sourceTree = "<group>"; };
+		59A4CC5E1AD1A819007B94CF /* DTCBookViewController~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "DTCBookViewController~iphone.xib"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +206,7 @@
 				596A403A1AC5C8780040A8AE /* DTCSimplePDFViewController.h */,
 				596A403B1AC5C8780040A8AE /* DTCSimplePDFViewController.m */,
 				596A403C1AC5C8780040A8AE /* DTCSimplePDFViewController.xib */,
+				59A4CC5E1AD1A819007B94CF /* DTCBookViewController~iphone.xib */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -203,10 +218,16 @@
 				5991D2CF1AD007BC004B0088 /* download-icon.png */,
 				5991D2D01AD007BC004B0088 /* download-icon@2x.png */,
 				5991D2D11AD007BC004B0088 /* download-icon@3x.png */,
+				59A4CC4E1AD14A48007B94CF /* pen-icon.png */,
+				59A4CC4F1AD14A48007B94CF /* pen-icon@2x.png */,
+				59A4CC501AD14A48007B94CF /* pen-icon@3x.png */,
 				5991D2E01AD01028004B0088 /* downloaded-icon.png */,
 				5991D2E11AD01028004B0088 /* downloaded-icon@2x.png */,
 				5991D2E21AD01028004B0088 /* downloaded-icon@3x.png */,
 				596A402D1AC5C5840040A8AE /* favorite-filled.png */,
+				59A4CC541AD14B6D007B94CF /* tag-icon.png */,
+				59A4CC551AD14B6D007B94CF /* tag-icon@2x.png */,
+				59A4CC561AD14B6D007B94CF /* tag-icon@3x.png */,
 				596A402E1AC5C5840040A8AE /* favorite-filled@2x.png */,
 				596A402F1AC5C5840040A8AE /* favorite-filled@3x.png */,
 				596A40301AC5C5840040A8AE /* favorite-outline.png */,
@@ -319,22 +340,29 @@
 			files = (
 				59A4CC4D1AD1340B007B94CF /* Starjedi.ttf in Resources */,
 				5991D2D71AD007BC004B0088 /* download-icon@3x.png in Resources */,
+				59A4CC5F1AD1A819007B94CF /* DTCBookViewController~iphone.xib in Resources */,
 				596A40341AC5C5840040A8AE /* favorite-filled@2x.png in Resources */,
 				596A40371AC5C5840040A8AE /* favorite-outline@2x.png in Resources */,
 				596A400E1AC5B5490040A8AE /* LaunchScreen.xib in Resources */,
 				596A40381AC5C5840040A8AE /* favorite-outline@3x.png in Resources */,
 				596A402B1AC5BE140040A8AE /* DTCBookViewController.xib in Resources */,
+				59A4CC531AD14A48007B94CF /* pen-icon@3x.png in Resources */,
+				59A4CC581AD14B6D007B94CF /* tag-icon@2x.png in Resources */,
 				596A403E1AC5C8780040A8AE /* DTCSimplePDFViewController.xib in Resources */,
+				59A4CC571AD14B6D007B94CF /* tag-icon.png in Resources */,
 				596A40361AC5C5840040A8AE /* favorite-outline.png in Resources */,
 				596A40351AC5C5840040A8AE /* favorite-filled@3x.png in Resources */,
 				5991D2E31AD01028004B0088 /* downloaded-icon.png in Resources */,
 				5991D2E41AD01028004B0088 /* downloaded-icon@2x.png in Resources */,
+				59A4CC511AD14A48007B94CF /* pen-icon.png in Resources */,
+				59A4CC521AD14A48007B94CF /* pen-icon@2x.png in Resources */,
 				596A400B1AC5B5490040A8AE /* Images.xcassets in Resources */,
 				5991D2DF1AD00B6F004B0088 /* DTCBookTableViewCell.xib in Resources */,
 				5991D2D51AD007BC004B0088 /* download-icon.png in Resources */,
 				596A40331AC5C5840040A8AE /* favorite-filled.png in Resources */,
 				5991D2D61AD007BC004B0088 /* download-icon@2x.png in Resources */,
 				5991D2E51AD01028004B0088 /* downloaded-icon@3x.png in Resources */,
+				59A4CC591AD14B6D007B94CF /* tag-icon@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

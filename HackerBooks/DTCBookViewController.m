@@ -10,24 +10,43 @@
 #import "DTCBook.h"
 #import "DTCSimplePDFViewController.h"
 #import "DTCLibraryTableViewController.h"
+#import "Settings.h"
 
 @implementation DTCBookViewController
 
 #pragma mark - Instance init
 - (id) initWithModel:(DTCBook *) aModel{
+    
     if (self = [super initWithNibName:nil
                                bundle:nil]) {
         _model = aModel;
         self.title = aModel.title;
     }
+    /*
+    NSString *nibName = nil;
+    if (IS_IPHONE) {
+        nibName = @"DTCBookViewControlleriPhone";
+    }
+    if (self = [super initWithNibName:nibName
+                               bundle:nil]) {
+        _model = aModel;
+        self.title = aModel.title;
+    }
+     */
     return self;
 }
 
 #pragma mark - View Lifecycle
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    // Display or hide the button that shows the table in portrait mode on iPads
-    self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+
+    [self configureView];
+    [self syncModelWithView];
+    
+    // si estamos en landscape, añadimos la vista que tenemos para landscape
+    if (UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation])) {
+        [self addPortraitViewWithProperFrame];
+    }
     
     // Suscribe to own notifications
     NSNotificationCenter *defCenter = [NSNotificationCenter defaultCenter];
@@ -35,10 +54,6 @@
     
     // Suscribe to SimplePDF notifications
     [defCenter addObserver:self selector:@selector(notifyThatBookPdfURLDidChange:) name:NOTIF_NAME_URL_PDF_CHANGE object:nil];
-    
-    
-    [self syncModelWithView];
-    NSLog(@"PDF path in Book: %@", [self.model.pdfURL absoluteString]);
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -47,6 +62,31 @@
     // Unsuscribe from own notifications
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    if (UIInterfaceOrientationIsLandscape(fromInterfaceOrientation)) {
+        // estamos en portrait
+        [self.portraitView removeFromSuperview];
+    }
+    else {
+        // estamos en landscape
+        [self addPortraitViewWithProperFrame];
+    }
+}
+
+- (void)addPortraitViewWithProperFrame
+{
+    // asignamos el frame a la vista en portrait para que se redimensione
+    // si la añadimos directamente como view, al no estar dentro de un VC, no se va a redimensionar
+    CGRect iPhoneScreen = [[UIScreen mainScreen] bounds];
+    CGRect portraitRect = CGRectMake(0, 0, iPhoneScreen.size.height, iPhoneScreen.size.width);
+    self.portraitView.frame = portraitRect;
+    [self.view addSubview:self.portraitView];
+}
+
+
+
 
 #pragma mark - Memory
 - (void)didReceiveMemoryWarning {
@@ -71,16 +111,58 @@
 
 
 #pragma mark - Utils
-- (void) syncModelWithView{
-    self.titleLabel.text = self.model.title;
-    self.authorsLabel.text = [self.model stringOfItemsFromArray:self.model.authors];
-    self.tagsLabel.text = [self.model stringOfItemsFromArray:self.model.tags];
+
+- (void) configureView{
+    UIColor *bgColor = [UIColor colorWithRed:255.0/255.0 green:249.0/255.0 blue:240.0/255.0 alpha:1];
+    [self.view setBackgroundColor:bgColor];
     
+    // Make sure the view not to use the whole screen when embeded in combiners
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    // Landscape
     self.titleLabel.numberOfLines = 0;
     self.authorsLabel.numberOfLines = 0;
     self.tagsLabel.numberOfLines = 0;
     
+    
+    // Portrait
+    self.titleLabelPortrait.numberOfLines = 0;
+    self.authorsLabelPortrait.numberOfLines = 0;
+    self.tagsLabelPortrait.numberOfLines = 0;
+    
+    // Display or hide the button that shows the table in portrait mode on iPads
+    if (!IS_IPHONE) {
+        // For iPads, we puts the button that shows/hides the table
+        self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+    }
+    
+    [self syncModelWithView];
+    
+    /*
+    // ajustamos los labels según su tamaño o reducimos la fuente en su caso ya que en el iPhone puede ocurrir que no quepa todo el texto
+    self.nameLabel.adjustsFontSizeToFitWidth = YES;
+    self.wineryNameLabel.adjustsFontSizeToFitWidth = YES;
+    self.typeLabel.adjustsFontSizeToFitWidth = YES;
+    self.originLabel.adjustsFontSizeToFitWidth = YES;
+    [self.grapesLabel sizeToFit];
+     */
+    
+    
+}
+
+- (void) syncModelWithView{
+    // Landscape
+    self.titleLabel.text = self.model.title;
+    self.authorsLabel.text = [self.model stringOfItemsFromArray:self.model.authors];
+    self.tagsLabel.text = [self.model stringOfItemsFromArray:self.model.tags];
     self.photoImageView.image = self.model.photo;
+    
+    // Portrait
+    self.titleLabelPortrait.text = self.model.title;
+    self.authorsLabelPortrait.text = [self.model stringOfItemsFromArray:self.model.authors];
+    self.tagsLabelPortrait.text = [self.model stringOfItemsFromArray:self.model.tags];
+    self.photoImageViewPortrait.image = self.model.photo;
+    
     [self updateFavoriteStatus];
 }
 
@@ -94,6 +176,7 @@
         image = [UIImage imageNamed:@"favorite-outline"];
     }
     [self.favoriteButton setImage:image];
+    [self.favoriteButtonPortrait setImage:image];
 }
 
 #pragma mark - UISplitViewControllerDelegate

@@ -55,9 +55,11 @@
     
     // Configure according the device
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+        //iPad
         [self configureForPadWithModel:library];
     }
     else{
+        //iPhone
         [self configureForPhoneWithModel:library];
     }
     
@@ -118,6 +120,9 @@
     NSDictionary *barTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                        [UIFont fontWithName:@"Starjedi" size:20], NSFontAttributeName ,whiteColor, NSForegroundColorAttributeName, titleShadow, NSShadowAttributeName,nil];
     [[UINavigationBar appearance] setTitleTextAttributes:barTextAttributes];
+    
+    // Tint color for toolbar
+    [[UIToolbar appearance] setTintColor:darkOrangeColor];
     
 }
 

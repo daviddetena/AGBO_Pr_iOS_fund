@@ -17,13 +17,25 @@
 
 @interface DTCBookViewController : UIViewController<UISplitViewControllerDelegate, DTCLibraryTableViewControllerDelegate>
 
+
 #pragma mark - Properties
+
+@property (strong,nonatomic) DTCBook *model;
+
+// Landscape
 @property (weak,nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak,nonatomic) IBOutlet UILabel *authorsLabel;
 @property (weak,nonatomic) IBOutlet UILabel *tagsLabel;
 @property (weak,nonatomic) IBOutlet UIImageView *photoImageView;
 @property (weak,nonatomic) IBOutlet UIBarButtonItem *favoriteButton;
-@property (strong,nonatomic) DTCBook *model;
+
+// Portrait
+@property (weak,nonatomic) IBOutlet UIView *portraitView;
+@property (weak,nonatomic) IBOutlet UILabel *titleLabelPortrait;
+@property (weak,nonatomic) IBOutlet UILabel *authorsLabelPortrait;
+@property (weak,nonatomic) IBOutlet UILabel *tagsLabelPortrait;
+@property (weak,nonatomic) IBOutlet UIImageView *photoImageViewPortrait;
+@property (weak,nonatomic) IBOutlet UIBarButtonItem *favoriteButtonPortrait;
 
 
 #pragma mark - Instance init

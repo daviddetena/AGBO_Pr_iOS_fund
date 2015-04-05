@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DTCBookViewController">
+            <connections>
+                <outlet property="authorsLabel" destination="0uw-nb-RAt" id="ylU-Lh-Irm"/>
+                <outlet property="authorsLabelPortrait" destination="9W7-3l-9Bt" id="DJd-v8-Pj9"/>
+                <outlet property="favoriteButton" destination="fYn-PR-VZQ" id="GXI-I5-BS2"/>
+                <outlet property="favoriteButtonPortrait" destination="fX8-xn-IhQ" id="NyR-yi-en7"/>
+                <outlet property="photoImageView" destination="RAZ-Lo-fEz" id="Ai9-1H-geS"/>
+                <outlet property="photoImageViewPortrait" destination="vfx-BC-pfB" id="vy7-9m-kpm"/>
+                <outlet property="portraitView" destination="iN0-l3-epB" id="uuV-3U-6d5"/>
+                <outlet property="tagsLabel" destination="UOQ-uA-Srg" id="fU1-DL-cVo"/>
+                <outlet property="tagsLabelPortrait" destination="5zr-8y-9oz" id="COp-zU-mvr"/>
+                <outlet property="titleLabel" destination="9kT-70-crW" id="BwZ-RM-lxp"/>
+                <outlet property="titleLabelPortrait" destination="AUy-sF-cE6" id="nC6-fJ-eYy"/>
+                <outlet property="view" destination="v2h-9M-AXm" id="Ctx-Xt-YTa"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="vfx-BC-pfB">
+                    <rect key="frame" x="24" y="42" width="157" height="210"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="AUy-sF-cE6">
+                    <rect key="frame" x="195" y="22" width="344" height="80"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="STHeitiSC-Light" family="Heiti SC" pointSize="26"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pen-icon.png" id="6sz-UF-gjY">
+                    <rect key="frame" x="195" y="119" width="30" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Author(s)" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9W7-3l-9Bt">
+                    <rect key="frame" x="233" y="104" width="306" height="60"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="Optima-Bold" family="Optima" pointSize="18"/>
+                    <color key="textColor" red="0.60606060610000001" green="0.60606060610000001" blue="0.60606060610000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="kRa-te-THD">
+                    <rect key="frame" x="0.0" y="276" width="568" height="44"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <items>
+                        <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="Cl6-oq-SNP"/>
+                        <barButtonItem image="favorite-outline.png" id="fX8-xn-IhQ">
+                            <connections>
+                                <action selector="toggleFavorite:" destination="-1" id="z88-YT-fUc"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="GSo-Ww-hsB"/>
+                        <barButtonItem title="PDF" id="bjm-8z-8em">
+                            <connections>
+                                <action selector="displayPdfURL:" destination="-1" id="cDl-5M-V7S"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="E4R-qa-RSi"/>
+                    </items>
+                </toolbar>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tag-icon.png" id="aau-vM-CeU">
+                    <rect key="frame" x="195" y="207" width="30" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tag(s)" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="5zr-8y-9oz">
+                    <rect key="frame" x="233" y="192" width="306" height="60"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="18"/>
+                    <color key="textColor" red="0.8980392157" green="0.58039215690000001" blue="0.17254901959999999" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+            <point key="canvasLocation" x="377" y="144"/>
+        </view>
+        <view contentMode="scaleToFill" id="v2h-9M-AXm">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pen-icon.png" id="1e7-E4-QpZ">
+                    <rect key="frame" x="17" y="116" width="30" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Author(s)" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0uw-nb-RAt">
+                    <rect key="frame" x="66" y="96" width="237" height="70"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="Optima-Bold" family="Optima" pointSize="16"/>
+                    <color key="textColor" red="0.60606060610000001" green="0.60606060610000001" blue="0.60606060610000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tag-icon.png" id="2bu-lC-lUc">
+                    <rect key="frame" x="17" y="190" width="30" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tag(s)" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="UOQ-uA-Srg">
+                    <rect key="frame" x="66" y="165" width="237" height="80"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="16"/>
+                    <color key="textColor" red="0.8980392157" green="0.58039215690000001" blue="0.17254901959999999" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="RAZ-Lo-fEz">
+                    <rect key="frame" x="0.0" y="276" width="320" height="248"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                </imageView>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="am4-6d-zSX">
+                    <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <items>
+                        <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="8Jr-RP-mIM"/>
+                        <barButtonItem image="favorite-outline.png" id="fYn-PR-VZQ">
+                            <connections>
+                                <action selector="toggleFavorite:" destination="-1" id="L9k-73-tsJ"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="dq4-CL-OVw"/>
+                        <barButtonItem title="PDF" id="JRJ-Xh-wVx">
+                            <connections>
+                                <action selector="displayPdfURL:" destination="-1" id="ovA-NL-A7f"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="VEn-cw-uFh"/>
+                    </items>
+                </toolbar>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9kT-70-crW">
+                    <rect key="frame" x="15" y="8" width="290" height="80"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="STHeitiSC-Light" family="Heiti SC" pointSize="24"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
+            <point key="canvasLocation" x="898" y="265"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="favorite-outline.png" width="30" height="30"/>
+        <image name="pen-icon.png" width="40" height="40"/>
+        <image name="tag-icon.png" width="40" height="40"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
