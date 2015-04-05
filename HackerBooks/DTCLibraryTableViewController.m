@@ -82,19 +82,6 @@
     }
 }
 
-/*
-// View for the title of sections
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    UILabel *label = [[UILabel alloc]init];
-    label.font = [UIFont boldSystemFontOfSize:14];
-    label.text = [self tableView:tableView titleForHeaderInSection:section];
-    label.tintColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1];
-    
-    UIView *header = [[UIView alloc]init];
-    [header addSubview:label];
-    return header;
-}
-*/
 // The title of every row will be the proper tag
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
     if(section == 0){
@@ -105,33 +92,6 @@
         return tagCapitalize;
     }
 }
-
-/*
-// The footer will be the number of books for every tag
-- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section{
-    if (section == 0) {
-        if ([self.favoriteBooks count]==0) {
-            return @"No favorites in the library";
-        }
-        else{
-            if([self.favoriteBooks count]==1){
-                return [NSString stringWithFormat:@"%ld book",(unsigned long)[self.favoriteBooks count]];
-            }
-            else{
-                return [NSString stringWithFormat:@"%ld books",(unsigned long)[self.favoriteBooks count]];
-            }
-        }
-    }
-    else{
-        if([self.model bookCountForTag:[self.model.tags objectAtIndex:section-1]]==1){
-            return [NSString stringWithFormat:@"%ld book",(unsigned long)[self.model bookCountForTag:[self.model.tags objectAtIndex:section-1]]];
-        }
-        else{
-            return [NSString stringWithFormat:@"%ld books",(unsigned long)[self.model bookCountForTag:[self.model.tags objectAtIndex:section-1]]];
-        }
-    }
-}
-*/
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
@@ -174,7 +134,7 @@
     NSNotification *notification = [NSNotification notificationWithName:NOTIF_NAME_BOOK_SELECTED_PDF_URL object:self userInfo:@{NOTIF_KEY_BOOK:book}];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
     
-    // Save current book in NSUserDefaults
+    // Save current selected book in NSUserDefaults
     [self saveLastSelectedBookAtIndexPath:indexPath];
 }
 
@@ -185,7 +145,6 @@
     _favoriteBooks = [[NSMutableArray alloc]init];
     
     for (DTCBook *book in self.model.books) {
-        NSLog(@"Valor esFavorito: %d",book.isFavorite);
         if (book.isFavorite) {
             [_favoriteBooks addObject:book];
         }
@@ -234,15 +193,14 @@
     // Search the book and update its isFavorite property
     for (DTCBook *each in self.model.books) {
         if ([each.title isEqualToString:book.title]) {
-            each.isFavorite = book.isFavorite;
-            NSLog(@"Status of book: %d",each.isFavorite);
+            each.isFavorite = book.isFavorite;            
         }
     }
     
     // Reload table data
     [self.tableView reloadData];
     // Save updated data
-    [self saveModelInSandbox];
+    [self saveModelToSandbox];
 }
 
 
@@ -259,9 +217,9 @@
         }
     }
     
-    // Reload table data and save updated model in sandbox
+    // Reload table data and save updated model to sandbox
     [self.tableView reloadData];
-    [self saveModelInSandbox];
+    [self saveModelToSandbox];
 }
 
 
@@ -276,7 +234,9 @@
 }
 
 #pragma mark - Sandbox
-- (void) saveModelInSandbox{
+
+// Save updated model to sandbox
+- (void) saveModelToSandbox{
     // Parse the array of dictionaries with the updated model as JSON and save it in /Documents
     NSArray *newJSONModel = [self.model proxyForJSON];
     NSError *error = nil;
@@ -285,28 +245,30 @@
                                                             error:&error];
 
     if (newJSONData == nil) {
-        NSLog(@"Error %@ when parsing new UPDATED model to JSON", error.localizedDescription);
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR"
+                                                        message:@"Error while parsing model to JSON"
+                                                       delegate:nil
+                                              cancelButtonTitle:nil
+                                              otherButtonTitles:@"Done", nil];
+        [alert show];
+
     }
     else{
         // Save data to sandbox
-        [self saveModelToSandbox:newJSONData];
-    }
-}
-
-- (void) saveModelToSandbox: (NSData *) modelData{
-    NSURL *url = [DTCSandboxURL URLToDocumentsFolderForFilename:SANDBOX_MODEL_FILENAME];
-    NSError *error;
-    BOOL ec = NO;
-    ec = [modelData writeToURL:url
-                       options:kNilOptions
-                         error:&error];
-    if (!ec) {
-        // Error when saving
-        NSLog(@"Error when saving model to Sandbox: %@",error.localizedDescription);
-    }
-    else{
-        // Saved successfully
-        NSLog(@"UPDATED JSON model saved successfully to sandbox");
+        NSURL *url = [DTCSandboxURL URLToDocumentsFolderForFilename:SANDBOX_MODEL_FILENAME];
+        BOOL ec = NO;
+        ec = [newJSONData writeToURL:url
+                           options:kNilOptions
+                             error:&error];
+        if (!ec) {
+            // Error when saving
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR"
+                                                            message:@"Error while saving updated model to sandbox"
+                                                           delegate:nil
+                                                  cancelButtonTitle:nil
+                                                  otherButtonTitles:@"Done", nil];
+            [alert show];
+        }
     }
 }
 

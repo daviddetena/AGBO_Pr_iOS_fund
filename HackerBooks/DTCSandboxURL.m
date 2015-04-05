@@ -11,22 +11,15 @@
 @implementation DTCSandboxURL
 
 #pragma mark - Class methods
-/*
-+ (instancetype) sandboxURLWithString: (NSString *) URLString{
-    return [[self alloc] initWithString:URLString];
-}
 
-+ (instancetype) sandboxURLWithFilename: (NSString *) aFilename{
-    return [[self alloc] initWithFilename:aFilename];
-}
- */
-
+// Get the whole path to Documents folder including the filename
 + (NSURL *) URLToDocumentsFolderForFilename: (NSString *) aFilename{
     NSURL *url = [self URLToFolder:@"docs"];
     url = [url URLByAppendingPathComponent:aFilename];
     return url;
 }
 
+// Get the whole path to Docsuments folder including the filename
 + (NSURL *) URLToDocumentsCustomFolder: (NSString *) aFolder forFilename: (NSString *) aFilename{
     // Create new folder into Documents folder
     NSURL *url = [self URLToFolder:@"docs"];
@@ -43,7 +36,6 @@
                                                         attributes:nil
                                                              error:&error];
         if (!ec) {
-            NSLog(@"Couldn't create new folder in /Documents");
             path = [self URLToDocumentsFolderForFilename:aFilename];
         }
         else{
@@ -56,12 +48,43 @@
     return path;
 }
 
+// Get the whole path to Docsuments folder including the filename
++ (NSURL *) URLToCacheCustomFolder: (NSString *) aFolder forFilename: (NSString *) aFilename{
+    // Create new folder into Documents folder
+    NSURL *url = [self URLToFolder:@"cache"];
+    NSURL *newFolder = [url URLByAppendingPathComponent:aFolder];
+    NSURL *path = nil;
+    
+    BOOL ec = NO;
+    NSError *error;
+    
+    // Create a folder for the book images
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[newFolder path]]){
+        ec = [[NSFileManager defaultManager] createDirectoryAtPath:[newFolder path]
+                                       withIntermediateDirectories:NO
+                                                        attributes:nil
+                                                             error:&error];
+        if (!ec) {
+            path = [self URLToDocumentsFolderForFilename:aFilename];
+        }
+        else{
+            path = [newFolder URLByAppendingPathComponent:aFilename];
+        }
+    }
+    else{
+        path = [newFolder URLByAppendingPathComponent:aFilename];
+    }
+    return path;
+}
+
+// Get the whole path to cache folder including the filename
 + (NSURL *) URLToCacheFolderForFilename: (NSString *) aFilename{
     NSURL *url = [self URLToFolder:@"cache"];
     url = [url URLByAppendingPathComponent:aFilename];
     return url;
 }
 
+// Get the path to <aFolder> folder in Sandbox
 + (NSURL *) URLToFolder: (NSString *) aFolder{
     NSFileManager *manager = [NSFileManager defaultManager];
     NSURL *url = nil;
@@ -85,25 +108,6 @@
         return [aURL absoluteString];
     }
 }
-
-/*
-#pragma mark - Init
-- (id) initWithString: (NSString *) aString{
-    if (self = [super initWithString:aString]) {
-        NSURL *url = [NSURL URLWithString:aString];
-        NSString *fileName = [url lastPathComponent];
-        _filename = fileName;
-    }
-    return self;
-}
-
-- (id) initWithFilename: (NSString *) aFilename{
-    if (self = [super init]) {
-        _filename = aFilename;
-    }
-    return self;
-}
-*/
 
 
 @end

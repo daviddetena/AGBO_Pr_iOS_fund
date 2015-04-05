@@ -20,8 +20,10 @@
 @protocol DTCLibraryTableViewControllerDelegate <NSObject>
 
 @optional
+// Method implemented by its delegate to update the book model
 - (void) libraryTableViewController:(DTCLibraryTableViewController *) libraryVC
                       didSelectBook:(DTCBook *) aBook;
+
 @end
 
 // Auto-delegate

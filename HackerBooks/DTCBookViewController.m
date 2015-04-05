@@ -22,17 +22,6 @@
         _model = aModel;
         self.title = aModel.title;
     }
-    /*
-    NSString *nibName = nil;
-    if (IS_IPHONE) {
-        nibName = @"DTCBookViewControlleriPhone";
-    }
-    if (self = [super initWithNibName:nibName
-                               bundle:nil]) {
-        _model = aModel;
-        self.title = aModel.title;
-    }
-     */
     return self;
 }
 
@@ -43,7 +32,7 @@
     [self configureView];
     [self syncModelWithView];
     
-    // si estamos en landscape, añadimos la vista que tenemos para landscape
+    // Add portrait view
     if (UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation])) {
         [self addPortraitViewWithProperFrame];
     }
@@ -63,28 +52,30 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+
+#pragma mark - Device orientation
+
+// Add/remove portrait view when the device orientation changes
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
     if (UIInterfaceOrientationIsLandscape(fromInterfaceOrientation)) {
-        // estamos en portrait
+        // Portrait
         [self.portraitView removeFromSuperview];
     }
     else {
-        // estamos en landscape
+        // Landscape
         [self addPortraitViewWithProperFrame];
     }
 }
 
+// Set the frame to the view in order for it to resize
 - (void)addPortraitViewWithProperFrame
 {
-    // asignamos el frame a la vista en portrait para que se redimensione
-    // si la añadimos directamente como view, al no estar dentro de un VC, no se va a redimensionar
     CGRect iPhoneScreen = [[UIScreen mainScreen] bounds];
     CGRect portraitRect = CGRectMake(0, 0, iPhoneScreen.size.height, iPhoneScreen.size.width);
     self.portraitView.frame = portraitRect;
     [self.view addSubview:self.portraitView];
 }
-
 
 
 
@@ -96,12 +87,14 @@
 
 
 #pragma mark - Actions
+
+// Mark/unmark book as favorite
 - (IBAction)toggleFavorite:(id)sender{
     self.model.isFavorite = !self.model.isFavorite;
-    //NSLog(@"Favorite = %d", self.model.favorite);
     
+    // Notify and update interface
     [self postNotificationBookDidToggleFavorite];
-    [self updateFavoriteStatus];
+    [self updateUIForFavoriteStatus];
 }
 
 - (IBAction)displayPdfURL:(id)sender{
@@ -163,11 +156,11 @@
     self.tagsLabelPortrait.text = [self.model stringOfItemsFromArray:self.model.tags];
     self.photoImageViewPortrait.image = self.model.photo;
     
-    [self updateFavoriteStatus];
+    [self updateUIForFavoriteStatus];
 }
 
-// Set favourite button background image regarding its state
-- (void) updateFavoriteStatus{
+// Set favorite button background image in relation to its state
+- (void) updateUIForFavoriteStatus{
     UIImage *image = nil;
     if (self.model.isFavorite) {
         image = [UIImage imageNamed:@"favorite-filled"];
@@ -178,6 +171,7 @@
     [self.favoriteButton setImage:image];
     [self.favoriteButtonPortrait setImage:image];
 }
+
 
 #pragma mark - UISplitViewControllerDelegate
 // Display or hide the button that shows the table in portrait mode on iPads
@@ -207,6 +201,8 @@
 
 
 #pragma mark - Notifications
+
+// Post notification to point the book was marked/unmarked as favorite (the table and pdf VC should suscribe to this)
 - (void) postNotificationBookDidToggleFavorite{
     // Create a notification to let the others VC know that there was a change in the model
     NSNotification *not = [NSNotification notificationWithName:NOTIF_NAME_BOOK_TOGGLE_FAVORITE object:self userInfo:@{NOTIF_KEY_BOOK_FAVORITE:self.model}];
@@ -216,7 +212,7 @@
 
 // Notification received from DTCBookVC
 - (void) notifyThatBookDidToggleFavorite: (NSNotification *) notification{
-    [self updateFavoriteStatus];
+    [self updateUIForFavoriteStatus];
 }
 
 
@@ -226,9 +222,6 @@
     NSDictionary *dict = [notification userInfo];
     DTCBook *book = [dict objectForKey:NOTIF_KEY_URL_PDF_CHANGE];
     self.model = book;
-    
-    NSLog(@"notifyThatBookPdfURLDidChange in DTCBookVC. New pdf url: %@", [self.model.pdfURL path]);
-    //[self syncModelWithView];
 }
 
 @end

@@ -28,7 +28,7 @@
         NSURL *url = nil;
         if (![[self.photoURL absoluteString] hasPrefix:@"http://"] || ! [[self.photoURL absoluteString] hasPrefix:@"https://"]) {
             // Load from local
-            url = [DTCSandboxURL URLToDocumentsCustomFolder:@"Images" forFilename:[self.photoURL absoluteString]];
+            url = [DTCSandboxURL URLToCacheCustomFolder:@"Images" forFilename:[self.photoURL absoluteString]];
         }
         else{
             // Load from remote

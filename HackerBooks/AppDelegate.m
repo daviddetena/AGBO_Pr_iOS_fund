@@ -29,7 +29,7 @@
     self.window = [[UIWindow alloc]
                    initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    // First run => save key LAST_SELECTED_BOOK to be the first to be displayed when the app relaunches. download JSON
+    // First run => save key LAST_SELECTED_BOOK to be the first to be displayed when the app relaunches. Download JSON
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSArray *libraryArray = nil;
     if(![defaults objectForKey:LAST_SELECTED_BOOK]){
@@ -42,18 +42,18 @@
         // Save manually
         [defaults synchronize];
         
-        NSLog(@"First launch: load from JSON");
+        //NSLog(@"First launch: load from JSON");
     }
     else{
-        // Load data from Sandbox
+        // Not first launch: Load data from Sandbox
         libraryArray = [self loadModelFromSandbox];
-        NSLog(@"Not first launch: load from JSON");
+        //NSLog(@"Not first launch: load from JSON");
     }
     
-    // Load the model of library (either from JSON or from Sandbox)
+    // Load the model of library (JSON or Sandbox)
     DTCLibrary *library = [[DTCLibrary alloc]initWithArray:libraryArray];
     
-    // Configure according the device
+    // Configure for the devices
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
         //iPad
         [self configureForPadWithModel:library];
@@ -63,8 +63,6 @@
         [self configureForPhoneWithModel:library];
     }
     
-    // Override point for customization after application launch.
-    //self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -91,10 +89,9 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+#pragma mark - Init settings
 
-
-#pragma mark - Settings
-
+// Custom UI
 -(void)customizeAppearance{
     
     // Custom colors
@@ -103,7 +100,7 @@
     UIColor *whiteColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1];
     UIColor *lightGrayColor = [UIColor colorWithRed:240.0/255.0 green:240.0/255.0 blue:240.0/255.0 alpha:1];
     UIColor *darkGrayColor = [UIColor colorWithRed:40.0/255.0 green:40.0/255.0 blue:40.0/255.0 alpha:1];
-
+    
     // Shadow for the Navigation title
     NSShadow *titleShadow = [[NSShadow alloc]init];
     titleShadow.shadowColor = darkGrayColor;
@@ -117,66 +114,25 @@
     [[UINavigationBar appearance] setBarTintColor:darkOrangeColor];
     [[UINavigationBar appearance] setTranslucent:NO];
     [[UINavigationBar appearance] setTintColor:lightGrayColor];
-    NSDictionary *barTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                       [UIFont fontWithName:@"Starjedi" size:20], NSFontAttributeName ,whiteColor, NSForegroundColorAttributeName, titleShadow, NSShadowAttributeName,nil];
+    NSDictionary *barTextAttributes = nil;
+    
+    // Appearance of the navigation bar's title for the devices
+    if (IS_IPHONE) {
+        barTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                             [UIFont fontWithName:@"Starjedi" size:14], NSFontAttributeName ,whiteColor, NSForegroundColorAttributeName, titleShadow, NSShadowAttributeName,nil];
+        
+    }
+    else{
+        barTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                             [UIFont fontWithName:@"Starjedi" size:20], NSFontAttributeName ,whiteColor, NSForegroundColorAttributeName, titleShadow, NSShadowAttributeName,nil];
+        
+    }
     [[UINavigationBar appearance] setTitleTextAttributes:barTextAttributes];
     
     // Tint color for toolbar
     [[UIToolbar appearance] setTintColor:darkOrangeColor];
     
 }
-
-- (void)configureForPadWithModel:(DTCLibrary *)model{
-    // Create the VCs. Select the book saved in NSUserDefaults as the first to be displayed
-    DTCLibraryTableViewController *libraryVC = [[DTCLibraryTableViewController alloc]initWithModel:model style:UITableViewStylePlain];
-    DTCBookViewController *bookVC = [[DTCBookViewController alloc] initWithModel:[self lastSelectedBookInModel:model]];
-    
-    // Create the combiners
-    UINavigationController *navLib = [[UINavigationController alloc]initWithRootViewController:libraryVC];
-    UINavigationController *navBook = [[UINavigationController alloc]initWithRootViewController:bookVC];
-    
-    // Create the UISplitVC with the other VCs
-    UISplitViewController *splitVC = [[UISplitViewController alloc]init];
-    splitVC.viewControllers = @[navLib,navBook];
-    
-    // Set delegates (the book will be the delegate for the UISplitVC and the tableVC)
-    libraryVC.delegate = bookVC;
-    splitVC.delegate = bookVC;
-    
-    // Set the UISplitVC as the root VC
-    self.window.rootViewController = splitVC;
-}
-
-- (void)configureForPhoneWithModel:(DTCLibrary *)model{
-    DTCLibraryTableViewController *libraryVC = [[DTCLibraryTableViewController alloc]initWithModel:model style:UITableViewStylePlain];
-
-    // Auto-delegate
-    libraryVC.delegate = libraryVC;
-    
-    // Create the combiner and add the library to it
-    UINavigationController *navLib = [[UINavigationController alloc]initWithRootViewController:libraryVC];
-    // Set as root view controller
-    self.window.rootViewController = navLib;
-}
-
-- (DTCBook *)lastSelectedBookInModel: (DTCLibrary *) library{
-    // Get the saved coords of the last book
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSArray *coords = [defaults objectForKey:LAST_SELECTED_BOOK];
-    NSUInteger section = [[coords objectAtIndex:0] integerValue];
-    NSUInteger pos = [[coords objectAtIndex:1] integerValue];
-    
-    // Select the book of these coords
-    DTCBook *book = nil;
-    if (section>0) {
-        book = [library bookForTag:[library.tags objectAtIndex:section-1] atIndex:pos];
-    }
-    else{
-        // VER CUAL DE LOS FAVORITOS ES EL QUE SE MOSTRABA
-    }
-    return book;
-}
-
 
 
 - (NSArray *)configureModelForFirstLaunch{
@@ -223,9 +179,7 @@
                         // Get local path for image and save it
                         NSURL *imageRemoteURL = [NSURL URLWithString:[dict objectForKey:@"image_url"]];
                         NSString *imageFilename = [DTCSandboxURL filenameFromURL:imageRemoteURL];
-                                                 
- //                       NSURL *localImage = [self localImageURLFromRemoteURL:imageRemoteURL];
-                        [self saveImageInSandbox:imageData withFilename:imageFilename];
+                        [self saveImageToSandbox:imageData withFilename:imageFilename];
                         
                         // Update image_url path to local. Create a new dictionary for every book with its updated image_url and add to the new array of dictionaries
                         DTCBook *book = [[DTCBook alloc]initWithDictionary:dict];
@@ -241,8 +195,8 @@
                         
                         // Parse the array of dictionaries as JSON and save it in /Documents
                         newJSONData = [NSJSONSerialization dataWithJSONObject:newJSONModel
-                                                                              options:NSJSONWritingPrettyPrinted
-                                                                                error:&error];
+                                                                      options:NSJSONWritingPrettyPrinted
+                                                                        error:&error];
                         if (newJSONModel == nil) {
                             NSLog(@"Error %@ when parsing new model to JSON", error.localizedDescription);
                         }
@@ -265,10 +219,70 @@
 }
 
 
-- (void) saveImageInSandbox: (NSData *) imageData withFilename: (NSString *) filename{
+// Settings for iPads
+- (void)configureForPadWithModel:(DTCLibrary *)model{
+    // Create the VCs. Select the book saved in NSUserDefaults as the first to be displayed
+    DTCLibraryTableViewController *libraryVC = [[DTCLibraryTableViewController alloc]initWithModel:model style:UITableViewStylePlain];
+    DTCBookViewController *bookVC = [[DTCBookViewController alloc] initWithModel:[self lastSelectedBookInModel:model]];
+    
+    // Create the combiners
+    UINavigationController *navLib = [[UINavigationController alloc]initWithRootViewController:libraryVC];
+    UINavigationController *navBook = [[UINavigationController alloc]initWithRootViewController:bookVC];
+    
+    // Create the UISplitVC with the other VCs
+    UISplitViewController *splitVC = [[UISplitViewController alloc]init];
+    splitVC.viewControllers = @[navLib,navBook];
+    
+    // Set delegates (the book will be the delegate for the UISplitVC and the tableVC)
+    libraryVC.delegate = bookVC;
+    splitVC.delegate = bookVC;
+    
+    // Set the UISplitVC as the root VC
+    self.window.rootViewController = splitVC;
+}
 
-    // Save image in /Documents
-    NSURL *url = [DTCSandboxURL URLToDocumentsCustomFolder:@"Images" forFilename:filename];
+
+// Settings for iPhones
+- (void)configureForPhoneWithModel:(DTCLibrary *)model{
+    DTCLibraryTableViewController *libraryVC = [[DTCLibraryTableViewController alloc]initWithModel:model style:UITableViewStylePlain];
+    
+    // Auto-delegate
+    libraryVC.delegate = libraryVC;
+    
+    // Create the combiner and add the library to it
+    UINavigationController *navLib = [[UINavigationController alloc]initWithRootViewController:libraryVC];
+    // Set as root view controller
+    self.window.rootViewController = navLib;
+}
+
+
+// Get last selected book to be the first to be displayed
+- (DTCBook *)lastSelectedBookInModel: (DTCLibrary *) library{
+    // Get the saved coords of the last book
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSArray *coords = [defaults objectForKey:LAST_SELECTED_BOOK];
+    NSUInteger section = [[coords objectAtIndex:0] integerValue];
+    NSUInteger pos = [[coords objectAtIndex:1] integerValue];
+    
+    // Select the book of these coords
+    DTCBook *book = nil;
+    if (section>0) {
+        book = [library bookForTag:[library.tags objectAtIndex:section-1] atIndex:pos];
+    }
+    else{
+        // VER CUAL DE LOS FAVORITOS ES EL QUE SE MOSTRABA
+    }
+    return book;
+}
+
+
+#pragma mark - Sandbox
+
+// Save image to sandbox
+- (void) saveImageToSandbox: (NSData *) imageData withFilename: (NSString *) filename{
+    
+    // Save image in /Documents/Images
+    NSURL *url = [DTCSandboxURL URLToCacheCustomFolder:@"Images" forFilename:filename];
     NSError *error;
     BOOL ec = NO;
     
@@ -279,46 +293,19 @@
     
     // Error when saving image
     if (ec==NO) {
-        NSLog(@"Error %@. Couldn't save image at %@", error.localizedDescription,[url path]);
-    }
-    else{
-        // Initialize every book with its local image path
-        
-        NSLog(@"Image successfully downloaded to %@", [url path]);
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR"
+                                                        message:@"Error while saving image to disk"
+                                                       delegate:nil
+                                              cancelButtonTitle:nil
+                                              otherButtonTitles:@"Done", nil];
+        [alert show];
     }
 }
 
 
-#pragma mark - Sandbox
-// NSURL with the default sandbox folder to save data (cache
-- (NSURL *) defaultSandboxURLForType: (NSString *) aType{
-    NSFileManager *manager = [NSFileManager defaultManager];
-    NSURL *url = nil;
-    
-    if ([aType isEqualToString:@"docs"]) {
-        url = [[manager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-        //NSLog(@"Documents folder");
-    }
-    else if ([aType isEqualToString:@"cache"]){
-        url = [[manager URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] lastObject];
-        //NSLog(@"Caches folder");
-    }
-    else{
-        // Save in tmp folder by default
-        url = [[manager URLsForDirectory:NSDownloadsDirectory inDomains:NSUserDomainMask] lastObject];
-        //NSLog(@"Downloads folder");
-    }
-    return url;
-}
-
-
-
-
+// Save the model in JSON to sandbox
 - (void) saveModelToSandbox: (NSData *) modelData{
-    // Save JSON model in a file of the app Documents directory
-//    NSURL *url = [self defaultSandboxURLForType:@"docs"];
-//    url = [url URLByAppendingPathComponent:@"library.txt"];
-//    
+
     NSURL *url = [DTCSandboxURL URLToDocumentsFolderForFilename:SANDBOX_MODEL_FILENAME];
     NSError *error;
     BOOL ec = NO;
@@ -327,14 +314,17 @@
                          error:&error];
     if (!ec) {
         // Error when saving
-        NSLog(@"Error when saving model to Sandbox: %@",error.localizedDescription);
-    }
-    else{
-        // Saved successfully
-        NSLog(@"JSON updated model saved successfully to sandbox");
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR"
+                                                        message:@"Error while saving model to disk"
+                                                       delegate:nil
+                                              cancelButtonTitle:nil
+                                              otherButtonTitles:@"Done", nil];
+        [alert show];
     }
 }
 
+
+// Load the library model from disk in an Array
 - (NSArray *) loadModelFromSandbox{
     
     NSURL *url = [DTCSandboxURL URLToDocumentsFolderForFilename:SANDBOX_MODEL_FILENAME];
@@ -345,12 +335,15 @@
     NSArray *libraryArray = nil;
     if (!modelData) {
         // Error when loading
-        NSLog(@"Error when loading from Sandbox: %@",error.localizedDescription);
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR"
+                                                        message:@"Error while loading library model from Sandbox"
+                                                       delegate:nil
+                                              cancelButtonTitle:nil
+                                              otherButtonTitles:@"Done", nil];
+        [alert show];
     }
     else{
-        // Loaded successfully
-        NSLog(@"JSON model successfully loaded from sandbox");
-        // Convert this data into an array of Dictionaries
+        // Loaded. Convert this data into an array of Dictionaries
         id JSONObjects = [NSJSONSerialization JSONObjectWithData:modelData
                                                          options:kNilOptions
                                                            error:&error];
@@ -361,21 +354,5 @@
     }
     return libraryArray;
 }
-
-/*
-- (NSString *) cleanRemoteURLString: (NSString *) remoteURLString{
-    // Clean slashes from remote url filepath
-    NSMutableString *path = [NSMutableString stringWithString:remoteURLString];
-    [path deleteCharactersInRange:[path rangeOfString:@"http://"]];
-    NSString *tmpStr = [path stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
-    
-    return tmpStr;
-}
-*/
-
-
-
-
-#pragma mark - Network
 
 @end

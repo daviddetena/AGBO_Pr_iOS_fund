@@ -14,7 +14,7 @@ pdf.
 
 **P: Al arrancar la app por primera vez, hay que guardar el JSON con los datos de los libros, así como las imágenes y los pdf. ¿Dónde guardarías estos datos?**
 
-*R:El modelo JSON del servidor sería conveniente guardarlo en la carpeta Documents de la Sandbox, para que se incluyera en el backup de iTunes y también para prevenir de que sea eliminado por el sistema cuando la aplicación empieza a ocupar espacio y se empiezan a eliminar los ficheros de las carpetas Caché y Tmp*
+*R: El modelo JSON del servidor sería conveniente guardarlo en la carpeta Documents de la Sandbox, para que se incluyera en el backup de iTunes y también para prevenir de que sea eliminado por el sistema cuando la aplicación empieza a ocupar espacio y se empiezan a eliminar los ficheros de las carpetas Caché y Tmp. Las imágenes y los pdfs podríamos guardarlos en Caché, ya que no son totalmente imprescindibles y pueden ser descargados de nuevo si es necesario.*
 
 **P: El ser o no favorito debe ser persistido de alguna manera cuando se cierra la app y cuando se abre. ¿Cómo harías eso? ¿Se te ocurre más de una forma de hacerlo? Explica la decisión de diseño que has tomado.**
 
@@ -22,7 +22,7 @@ pdf.
 
 **P: Al cambiar el valor de isFavorite de un libro, la tabla debe reflejar ese hecho. ¿Cómo lo harías? ¿Cómo enviarías información del libro al controlador de tabla? ¿Se te ocurre más de una forma de hacerlo? ¿Cuál te parece mejor? Explica tu elección.**
 
-*R: Principalmente pensé en dos opciones: mediante protocolo delegado o mediante notificaciones. Siempre que se pueda es mejor utilizar protocolo delegado que notificaciones. Las notificaciones no garantizan que siempre se reciba la información mediante la notificación.*
+*R: Principalmente pensé en dos opciones: mediante protocolo delegado o mediante notificaciones. Siempre que se pueda es mejor utilizar protocolo delegado que notificaciones. Las notificaciones no garantizan que siempre se reciba la información mediante la notificación. *
 
 **P:Utilizar reloadData de UITableView. Esto hace que la tabla vuelva a pedir datos a su dataSource. ¿Es esto una aberración desde el punto de vista de rendimiento? Explica por qué no es así. ¿Hay una forma alternativa? ¿Cuándo crees que vale la pena usarlo?**
 
@@ -31,4 +31,14 @@ pdf.
 **P: Estando en el SimplePDFViewController, cuando el usuario cambie en la tabla el libro seleccionado, el pdf mostrado debe de actualizarse. ¿Cómo lo harías?**
 
 *R: Si la tabla no tiene delegado asignado, lo haría definiendo un protocolo en la tabla e indicando que el delegado de la tabla sea el controlador que muestra el pdf. Así, este implementaría un método del protocolo de la tabla con el que se le pasaría el libro seleccionado. El controlador de pdf no tendría más que actualizar su modelo y hacer que el navegador muestre el pdf del nuevo libro seleccionado en la tabla. En nuestro caso, dado que la tabla ya tiene un delegado (el BookViewController, utilizado para la vista en split en iPad y la tabla es delegada de sí misma en iPhone), he recurrido a notificaciones. El controlador se suscribe a las notificaciones, la tabla manda una notificación cuando pulsa en una celda (didSelectRowAtIndexPath) con el libro pulsado, y el controlador de pdf al recibir la notificación, extrae de ella el libro seleccionado y actualiza su modelo con ese nuevo libro. A continuación carga el nuevo pdf.*
+
+**COMENTARIOS**
+
+Me han ocurrido los siguientes problemas, pero ya no he tenido tiempo de solucionarlos:
+
+1. La parte extra no he tenido tiempo de realizarla. La dejo como tarea pendiente.
+2. El tema de los favoritos me ha traído de cabeza. Aunque no se especificaba en el enunciado de la práctica, he implementado un método llamado lastSelectedBook para que cargue por defecto (en iPad) el último libro seleccionado. El problema es que inicialmente no traté los favoritos como un "tag" más de libros, por lo que el método de AGTLibrary bookForTag:atIndex: no me vale para que se muestre uno de los favoritos como el inicial en caso de que uno de ellos hubiera sido el seleccionado. 
+3. Otra cuestión que he descubierto a última hora es que por alguna razón que no he logrado entender, cuando carga algunos pdf, la aplicación se cae. En otros no pasa y se muestra correctamente. 
+4. Al hacer un .xib distinto para iPhone, se me descuadran los elementos gráficos, no sé por qué. He seguido y mirado el código de ejemplo de Baccus y también hay algunos descuadres.
+
 

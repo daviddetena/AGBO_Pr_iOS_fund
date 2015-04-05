@@ -14,21 +14,11 @@
 @property (weak,nonatomic) NSString *filename;
 
 #pragma mark - Class methods
-// Class init
-/*
-+ (instancetype) sandboxURLWithString: (NSString *) URLString;
-+ (instancetype) sandboxURLWithFilename: (NSString *) aFilename;
- */
 + (NSURL *) URLToDocumentsFolderForFilename: (NSString *) aFilename;
 + (NSURL *) URLToDocumentsCustomFolder: (NSString *) aFolder forFilename: (NSString *) aFilename;
 + (NSURL *) URLToCacheFolderForFilename: (NSString *) aFilename;
++ (NSURL *) URLToCacheCustomFolder: (NSString *) aFolder forFilename: (NSString *) aFilename;
 + (NSURL *) URLToFolder: (NSString *) aFolder;
 + (NSString *) filenameFromURL: (NSURL *) aURL;
-
-#pragma mark - Init
-/*
-- (id) initWithString:(NSString *) URLString;
-- (id) initWithFilename:(NSString *) aFilename;
- */
 
 @end

@@ -42,6 +42,7 @@
     
     // This class will be the delegate for the browser
     self.browser.delegate = self;
+    [self activateViewIndicator];
     [self configureOriginOfPdfURL];
 }
 
@@ -63,15 +64,13 @@
 
 #pragma mark - Utils
 
+// Set pdf origin (local or remote)
 - (void) configureOriginOfPdfURL{
-    NSLog(@"En configureOriginOfPdfURL la url del pdf es: %@",[self.model.pdfURL absoluteString]);
     
     if ([self isPdfURLRemote]) {
-        [self activateViewIndicator];
         [self loadPDFFromRemote];
     }
     else{
-        [self activateViewIndicator];
         [self loadPDFFromSandbox];
     }
 }
@@ -79,27 +78,27 @@
 // Check if the pdf url of the model is local or remote
 - (BOOL) isPdfURLRemote{
     if ([[self.model.pdfURL absoluteString] hasPrefix:@"http"] || [[self.model.pdfURL absoluteString] hasPrefix:@"https"]) {
-        NSLog(@"PDF remote");
         return YES;
     }
     else{
-        NSLog(@"PDF local");
         return NO;
     }
 }
 
+// Shows activity indicator and starts animating
 - (void) activateViewIndicator{
     self.activityView.hidden = NO;
     [self.activityView startAnimating];
 }
 
+// Hides activity indicator and stops animating
 - (void) deactivateViewIndicator{
     self.activityView.hidden = YES;
     [self.activityView stopAnimating];
 }
 
+// Display pdf in browser
 - (void) displayPDF{
-    NSLog(@"Showing pdf with url: %@", [self.model.pdfURL absoluteString]);
     [self deactivateViewIndicator];
     [self.browser loadData:self.pdfData MIMEType:@"application/pdf" textEncodingName:@"utf-8" baseURL:nil];
 }
@@ -107,40 +106,44 @@
 
 #pragma mark - Sandbox
 
-- (void) savePDFInSandbox: (NSData *) pdfData withFilename: (NSString *) filename{
-    // Save image in /Documents/PDFs
-    NSURL *url = [DTCSandboxURL URLToDocumentsCustomFolder:@"PDFs" forFilename:filename];
+- (void) savePDFToSandbox: (NSData *) pdfData withFilename: (NSString *) filename{
+    // Save image to /Documents/PDFs
+    NSURL *url = [DTCSandboxURL URLToCacheCustomFolder:@"PDFs" forFilename:filename];
     NSError *error;
     BOOL ec = NO;
     
-    // Save image in local directory
+    // Save image to local directory
     ec = [pdfData writeToURL:url
                        options:kNilOptions
                          error:&error];
     
-    // Error when saving image
+    // Error while saving pdf
     if (ec==NO) {
-        NSLog(@"Error %@. Couldn't save pdf at %@", error.localizedDescription,[url absoluteString]);
-    }
-    else{
-        // Initialize every book with its local image path
-        
-        NSLog(@"PDF successfully downloaded to %@", [url absoluteString]);
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR"
+                                                        message:@"Error while saving pdf to sandbox"
+                                                       delegate:nil
+                                              cancelButtonTitle:nil
+                                              otherButtonTitles:@"Done", nil];
+        [alert show];
     }
 }
 
 - (void) loadPDFFromSandbox{
-    NSLog(@"Entro en loadPDFFromSandbox");
     NSError *error;
-    NSURL *localURL = [DTCSandboxURL URLToDocumentsCustomFolder:@"PDFs" forFilename:[DTCSandboxURL filenameFromURL:self.model.pdfURL]];
+    NSURL *localURL = [DTCSandboxURL URLToCacheCustomFolder:@"PDFs" forFilename:[DTCSandboxURL filenameFromURL:self.model.pdfURL]];
     
     self.pdfData = [NSData dataWithContentsOfURL:localURL options:kNilOptions error:&error];
     if (!self.pdfData) {
         // Error
-        NSLog(@"Error while loading PDF from Sandbox: %@",error.localizedDescription);
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR"
+                                                        message:@"Error while loading PDF from disk"
+                                                       delegate:nil
+                                              cancelButtonTitle:nil
+                                              otherButtonTitles:@"Done", nil];
+        [alert show];
     }
     else{
-        NSLog(@"Load pdf from Sandbox");
+        // Display pdf from sandbox
         [self displayPDF];
     }
 }
@@ -156,12 +159,15 @@
     if (urlConnection) {
         // If connection, alloc receivedData
         _receivedData = [[NSMutableData alloc]init];
-        //return YES;
     }
     else{
-        // Errors when connecting
-        NSLog(@"Error in viewDidLoad. Couldn't connect to server");
-        //return NO;
+        // Error while connecting
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR"
+                                                        message:@"Error while connecting to server to download PDF"
+                                                       delegate:nil
+                                              cancelButtonTitle:nil
+                                              otherButtonTitles:@"Done", nil];
+        [alert show];
     }
 }
 
@@ -169,7 +175,12 @@
 #pragma mark - UIWebViewDelegate
 - (void) webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
     [self deactivateViewIndicator];
-    NSLog(@"Error when loading url: %@", error.localizedDescription);
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR"
+                                                    message:@"Error while loading url in browser"
+                                                   delegate:nil
+                                          cancelButtonTitle:nil
+                                          otherButtonTitles:@"Done", nil];
+    [alert show];
 }
 
 - (void) webViewDidFinishLoad:(UIWebView *)webView{
@@ -212,21 +223,18 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection{
-    
-    NSLog(@"URLConnection finished loading...");
-    
+
     // Once data is received, create pdf with it and ask the browser to display it
     self.pdfData = [NSData dataWithData:self.receivedData];
+    
     NSString *cleanPathname = [self trimSpacesFromString:[self.model.pdfURL absoluteString]];
     NSString *newFilename = [DTCSandboxURL filenameFromURL:[NSURL URLWithString:cleanPathname]];
     
     // Update PDF url in model and JSON
     self.model.pdfURL = [NSURL URLWithString:newFilename];
 
-    //NSLog(@"After downloading, notify that pdf url has changed. New: %@", [self.model.pdfURL absoluteString]);
-    
     // Save pdf in Sandbox
-    [self savePDFInSandbox:self.pdfData withFilename:newFilename];
+    [self savePDFToSandbox:self.pdfData withFilename:newFilename];
     
     // Display PDF
     [self displayPDF];
@@ -242,12 +250,10 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
     // Get the model from Notification
     NSDictionary *dict = [n userInfo];
     DTCBook *book = [dict objectForKey:NOTIF_KEY_BOOK];
-    NSLog(@"notify the PDFViewer that the library selected a book with pdf: %@",[book.pdfURL absoluteString]);
     self.model = book;
     
     [self configureOriginOfPdfURL];
 }
-
 
 
 #pragma mark - Utils
